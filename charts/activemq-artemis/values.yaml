@@ -49,4 +49,3 @@ rbac:
 # Probably this is only useful for minikube environments
 loadbalancer:
   enabled: false
-

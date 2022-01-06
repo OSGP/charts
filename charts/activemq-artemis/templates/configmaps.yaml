@@ -1,0 +1,67 @@
+{{- $namespace := .Release.Namespace -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}
+data:
+  broker.xml: |
+    <configuration xmlns="urn:activemq" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:activemq /schema/artemis-configuration.xsd">
+      <core xmlns="urn:activemq:core" xsi:schemaLocation="urn:activemq:core ">
+        
+        <security-enabled>false</security-enabled>
+        
+        <jmx-management-enabled>true</jmx-management-enabled>
+        
+        <address-settings>
+          <!-- if you define auto-create on certain queues, management has to be auto-create -->
+          <address-setting match="activemq.management#">
+            <dead-letter-address>DLQ</dead-letter-address>
+            <expiry-address>ExpiryQueue</expiry-address>
+            <redelivery-delay>0</redelivery-delay>
+            <!-- with -1 only the global-max-size is in use for limiting -->
+            <max-size-bytes>-1</max-size-bytes>
+            <message-counter-history-day-limit>10</message-counter-history-day-limit>
+            <address-full-policy>PAGE</address-full-policy>
+            <auto-create-queues>true</auto-create-queues>
+            <auto-create-addresses>true</auto-create-addresses>
+          </address-setting>
+          <!--default for catch all-->
+          <address-setting match="#">
+            <dead-letter-address>DLQ</dead-letter-address>
+            <expiry-address>ExpiryQueue</expiry-address>
+            <redelivery-delay>0</redelivery-delay>
+            <!-- with -1 only the global-max-size is in use for limiting -->
+            <max-size-bytes>-1</max-size-bytes>
+            <message-counter-history-day-limit>10</message-counter-history-day-limit>
+            <address-full-policy>PAGE</address-full-policy>
+            <auto-create-queues>true</auto-create-queues>
+            <auto-create-addresses>true</auto-create-addresses>
+          </address-setting>
+        </address-settings>
+        <addresses>
+          <address name="DLQ">
+            <anycast>
+              <queue name="DLQ"/>
+            </anycast>
+          </address>
+          <address name="ExpiryQueue">
+            <anycast>
+              <queue name="ExpiryQueue"/>
+            </anycast>
+          </address>
+        </addresses>
+        
+        <connectors>
+          <connector name="netty-connector">tcp://0.0.0.0:61617</connector>
+        </connectors>
+        
+        <connection-ttl-override>300000</connection-ttl-override>
+        
+        <!-- Acceptors -->
+        <acceptors>
+          <acceptor name="netty-ssl-acceptor">tcp://0.0.0.0:61617?sslEnabled=true;keyStorePath=/var/lib/artemis-instance/ssl/broker.ks;keyStorePassword=${keyStorePassword};trustStorePath=/var/lib/artemis-instance/ssl/client.ts;trustStorePassword=${trustStorePassword};needClientAuth=true;enabledProtocols=TLSv1,TLSv1.1,TLSv1.2</acceptor>
+        </acceptors>
+        
+      </core>
+      
+    </configuration>

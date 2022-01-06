@@ -1,0 +1,99 @@
+activemq-artemis:
+  enabled: false
+  persistence:
+    enabled: true
+    
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 256Mi
+      cpu: 100m
+
+artemisCloud:
+  enabled: false
+    
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 256Mi
+      cpu: 100m
+      
+  storage:
+    size: 8Gi
+
+imagePullPolicy: IfNotPresent
+
+postgresql:
+  enabled: false
+  #postgresqlUsername: osp_admin
+  #password: 1234
+  #existingSecret: osgp-postgresql-admin
+  
+  #metrics:
+    # enabled: false
+    # postgresqlDatabase: db_name
+    
+  # initdbScripts:
+    # create_databases.sql: |
+      # CREATE DATABASE osgp_core
+        # WITH OWNER = osp_admin
+             # ENCODING = 'UTF8'
+             # CONNECTION LIMIT = -1;
+
+resources:
+  limits:
+    cpu: 4
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+service:
+  port: 8080
+
+httpdSidecar:
+  enabled: false
+  
+  image: httpd:2.4.52-alpine
+  
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 443
+      scheme: HTTPS
+    initialDelaySeconds: 30
+    periodSeconds: 5
+  livenessProbe: 
+    httpGet:
+      path: /
+      port: 443
+      scheme: HTTPS
+    initialDelaySeconds: 30
+    periodSeconds: 5
+  
+efsStorage:
+  create: false
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  labels: {}
+  path: /
+  hosts:
+    - hostname.ogsp.cloud
+  ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
+  extraPaths: []
+  # - path: /*
+  #   backend:
+  #     serviceName: ssl-redirect
+  #     servicePort: use-annotation
+  tls: []
+  #  - secretName: wildcard-hostname-osgp-cloud
+  #    hosts:
+  #      - hostname.ogsp.cloud

@@ -69,6 +69,10 @@ jobs:
         with:
           node_image: kindest/node:${{ matrix.k8s }}
           
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+          
       - name: Run chart-testing (install)
         uses: helm/chart-testing-action@v2.1.0
         with:

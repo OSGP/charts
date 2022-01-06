@@ -28,4 +28,4 @@ jobs:
           charts_dir: charts
           charts_repo_url: https://osgp.github.io/charts/
         env:
-          CR_TOKEN: "${{ secrets.CR_TOKEN }}"
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

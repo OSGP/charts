@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-tomcat
+  labels:
+    app: {{ .Release.Name }}
+data:
+{{ if .Values.overrideTomcatConfig}}
+  {{- range $name, $data := .Values.overrideTomcatConfig }}
+  {{ $name }}: |
+    {{- $data | nindent 4 }}
+  {{- end }}
+{{ else }}
+{{ (tpl (.Files.Glob "config/tomcat/*").AsConfig . ) | indent 2 }}
+{{ end }}

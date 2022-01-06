@@ -1,0 +1,24 @@
+{{- $releaseName := .Release.Name -}}
+{{- $servicePort := .Values.service.port -}}
+{{- $targetPort := .Values.service.targetPort -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $releaseName }}
+  labels:
+    app: {{ $releaseName }}
+spec:
+  ports:
+  - name: {{ $releaseName }}
+    port: {{ $servicePort }}
+    targetPort: {{ $targetPort | default $servicePort }}
+    protocol: TCP
+  {{- range .Values.extraServicePorts }}
+  - name: {{ $releaseName }}-{{ .name }}
+    port: {{ .port }}
+    targetPort: {{ .targetPort | default .port }}
+    protocol: {{ .protocol | default "TCP" }}
+  {{- end }}
+
+  selector:
+    app: {{ $releaseName }}

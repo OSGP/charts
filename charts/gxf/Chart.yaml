@@ -1,7 +1,7 @@
 apiVersion: v2
 name: GXF
 description: Generic GXF Helm chart
-version: '1.1'
+version: '1.2.0'
 icon: https://artwork.lfenergy.org/projects/grid-exchange-fabric/abbrev/color/grid-exchange-fabric-abbrev-color.png
 maintainers:
   - name: OSGP
@@ -9,8 +9,8 @@ maintainers:
     url: https://www.lfenergy.org/projects/gxf/
 dependencies:
 - name: activemq-artemis
-  version: "0.0.2"
-  repository: "file://../activemq-artemis"
+  version: "0.0.5"
+  repository: "https://osgp.github.io/charts/"
   condition: activemq-artemis.enabled
 - name: postgresql
   version: "8.6.3"

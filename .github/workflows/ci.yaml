@@ -22,15 +22,13 @@ jobs:
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
-          changed=$(ct list-changed)
+          changed=$(ct list-changed  --config .github/ct.yaml)
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
           fi
         
       - name: Run chart-testing (lint)
-        with:
-          command: lint
-          config: .github/ct.yaml
+        run: ct lint --config .github/ct.yaml
 
   kubeconform-chart:
     runs-on: ubuntu-latest
@@ -39,9 +37,9 @@ jobs:
     strategy:
       matrix:
         k8s:
-          - v1.21.8
-          - v1.22.5
-          - v1.23.1
+          - v1.21.2
+          - v1.22.4
+          - v1.23.0
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -59,9 +57,9 @@ jobs:
     strategy:
       matrix:
         k8s:
-          - v1.21.8
-          - v1.22.5
-          - v1.23.1
+          - v1.21.2
+          - v1.22.4
+          - v1.23.0
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -71,8 +69,12 @@ jobs:
         with:
           node_image: kindest/node:${{ matrix.k8s }}
           
-      - name: Run chart-testing (install)
-        uses: helm/chart-testing-action@v2.1.0
+      - uses: actions/setup-python@v2
         with:
-          command: install
-          config: .github/ct.yaml
+          python-version: 3.7
+          
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.1.0
+          
+      - name: Run chart-testing (install)
+        run: ct install --config .github/ct.yaml

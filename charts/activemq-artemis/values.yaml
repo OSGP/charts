@@ -13,7 +13,7 @@ artemisPassword: simetraehcapa
 ## It's recommended to change this to 'Always' if the image tag is 'latest'
 ## ref: http://kubernetes.io/docs/user-guide/images/#updating-images
 ##
-#imagePullPolicy: IfNotPresent
+# imagePullPolicy: IfNotPresent
 imagePullPolicy: Always
 
 replicas: 1
@@ -34,8 +34,11 @@ persistence:
 ##
 resources:
   requests:
-    memory: 256Mi
-    cpu: 100m
+    memory: 512Mi
+    cpu: 250m
+  limits:
+    memory: 1Gi
+    cpu: 500m
 
 ## Install Default RBAC roles and bindings
 rbac:
@@ -46,4 +49,3 @@ rbac:
 # Probably this is only useful for minikube environments
 loadbalancer:
   enabled: false
-

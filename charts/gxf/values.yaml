@@ -2,7 +2,7 @@ activemq-artemis:
   enabled: false
   persistence:
     enabled: true
-    
+
   resources:
     requests:
       memory: 256Mi
@@ -13,7 +13,7 @@ activemq-artemis:
 
 artemisCloud:
   enabled: false
-    
+
   resources:
     requests:
       memory: 256Mi
@@ -21,7 +21,7 @@ artemisCloud:
     limits:
       memory: 256Mi
       cpu: 100m
-      
+
   storage:
     size: 8Gi
 
@@ -29,20 +29,6 @@ imagePullPolicy: IfNotPresent
 
 postgresql:
   enabled: false
-  #postgresqlUsername: osp_admin
-  #password: 1234
-  #existingSecret: osgp-postgresql-admin
-  
-  #metrics:
-    # enabled: false
-    # postgresqlDatabase: db_name
-    
-  # initdbScripts:
-    # create_databases.sql: |
-      # CREATE DATABASE osgp_core
-        # WITH OWNER = osp_admin
-             # ENCODING = 'UTF8'
-             # CONNECTION LIMIT = -1;
 
 resources:
   limits:
@@ -57,9 +43,9 @@ service:
 
 httpdSidecar:
   enabled: false
-  
+
   image: httpd:2.4.52-alpine
-  
+
   readinessProbe:
     httpGet:
       path: /
@@ -67,14 +53,14 @@ httpdSidecar:
       scheme: HTTPS
     initialDelaySeconds: 30
     periodSeconds: 5
-  livenessProbe: 
+  livenessProbe:
     httpGet:
       path: /
       port: 443
       scheme: HTTPS
     initialDelaySeconds: 30
     periodSeconds: 5
-  
+
 efsStorage:
   create: false
 

@@ -13,7 +13,7 @@ artemisPassword: simetraehcapa
 ## It's recommended to change this to 'Always' if the image tag is 'latest'
 ## ref: http://kubernetes.io/docs/user-guide/images/#updating-images
 ##
-#imagePullPolicy: IfNotPresent
+# imagePullPolicy: IfNotPresent
 imagePullPolicy: Always
 
 replicas: 1

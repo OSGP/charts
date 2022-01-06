@@ -29,20 +29,6 @@ imagePullPolicy: IfNotPresent
 
 postgresql:
   enabled: false
-  #postgresqlUsername: osp_admin
-  #password: 1234
-  #existingSecret: osgp-postgresql-admin
-  
-  #metrics:
-    # enabled: false
-    # postgresqlDatabase: db_name
-    
-  # initdbScripts:
-    # create_databases.sql: |
-      # CREATE DATABASE osgp_core
-        # WITH OWNER = osp_admin
-             # ENCODING = 'UTF8'
-             # CONNECTION LIMIT = -1;
 
 resources:
   limits:

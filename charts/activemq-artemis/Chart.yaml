@@ -9,6 +9,10 @@ keywords:
 - mom
 - amqp
 - jms
+maintainers:
+  - name: Grid eXchange Fabric (GXF)
+    email: gxf@lists.lfenergy.org
+    url: https://www.lfenergy.org/projects/gxf/
 home: https://activemq.apache.org/artemis/
 icon: https://activemq.apache.org/artemis/images/activemq-logo.png
 sources:

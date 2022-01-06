@@ -10,7 +10,7 @@ keywords:
 - amqp
 - jms
 maintainers:
-  - name: Grid eXchange Fabric (GXF)
+  - name: OSGP
     email: gxf@lists.lfenergy.org
     url: https://www.lfenergy.org/projects/gxf/
 home: https://activemq.apache.org/artemis/

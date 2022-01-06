@@ -12,11 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
         
-      - name: Set up Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: v3.4.0
-        
       - uses: actions/setup-python@v2
         with:
           python-version: 3.7
@@ -27,13 +22,13 @@ jobs:
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
-          changed=$(ct list-changed)
+          changed=$(ct list-changed  --config .github/ct.yaml)
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
           fi
         
       - name: Run chart-testing (lint)
-        run: ct lint
+        run: ct lint --config .github/ct.yaml
         
       - name: Run chart-testing (lint)
         uses: helm/kind-action@v1.2.0
@@ -42,7 +37,7 @@ jobs:
           config: .github/ct.yaml
           
       - name: Run chart-testing (install)
-        run: ct install
+        run: ct install --config .github/ct.yaml
 
   kubeconform-chart:
     runs-on: ubuntu-latest

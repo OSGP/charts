@@ -1,8 +1,8 @@
 ## activemq-artemis image version
 ## ref: https://hub.docker.com/r/vromero/activemq-artemis/tags
 ##
-image: docker-registry.smhe.osgp.cloud/operations/activemq-artemis
-imageTag: "20211220134010"
+image: apache/activemq-artemis
+imageTag: latest
 
 ## Create a database user
 ##

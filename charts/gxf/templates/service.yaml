@@ -1,9 +1,13 @@
 {{- $releaseName := .Release.Name -}}
-{{- $servicePort := .Values.service.port -}}
-{{ if .Values.httpdSidecar.enabled }}
-  {{- $servicePort = 443 -}}
-{{ end }}
-{{- $targetPort := .Values.service.targetPort -}}
+{{- $servicePort := 80 -}}
+{{- $targetPort := 8080 }}
+{{- if .Values.service }}
+  {{- $servicePort = .Values.service.port | default $servicePort }}
+{{- end }}
+{{- if .Values.httpdSidecar.enabled }}
+  {{- $servicePort = .Values.service.port | default 443 }}
+  {{- $targetPort = 443 -}}
+{{- end }}
 apiVersion: v1
 kind: Service
 metadata:

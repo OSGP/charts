@@ -19,15 +19,25 @@
 
   <Service name="Catalina">
 
+{{- if .Values.httpdSidecar.enabled }}
     <Connector port="8009"
                protocol="AJP/1.3"
-               redirectPort="8443"
                maxThreads="800"
                minSpareThreads="10"
                connectionTimeout="10000"
                keepAliveTimeout="10000"
                prestartminSpareThreads="true"
                secretRequired="false" />
+{{- else }}
+    <Connector port="8080"
+               protocol="HTTP/1.1"
+               maxThreads="800"
+               minSpareThreads="10"
+               connectionTimeout="10000"
+               keepAliveTimeout="10000"
+               prestartminSpareThreads="true"
+               secretRequired="false" />
+{{- end }}
 
     <Engine name="Catalina" defaultHost="localhost">
 

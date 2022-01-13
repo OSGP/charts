@@ -60,12 +60,15 @@ spec:
                 key: {{ .secretKey }}
           {{- end }}
         ports:
-        - containerPort: 8080
-          name: http
-          protocol: TCP
-        - containerPort: 8009
-          name: ajp
-          protocol: TCP
+{{- if .Values.httpdSidecar.enabled }}
+          - containerPort: 8009
+            name: ajp
+            protocol: TCP
+{{- else }}
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+{{- end }}
         {{- range .Values.extraPorts }}
         - containerPort: {{ .port }}
           name: {{ .name }}

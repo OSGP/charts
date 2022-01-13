@@ -1,5 +1,8 @@
 {{- $releaseName := .Release.Name -}}
 {{- $servicePort := .Values.service.port -}}
+{{ if .Values.httpdSidecar.enabled }}
+  {{- $servicePort = 443 -}}
+{{ end }}
 {{- $targetPort := .Values.service.targetPort -}}
 apiVersion: v1
 kind: Service

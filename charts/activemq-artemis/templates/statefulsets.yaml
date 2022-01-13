@@ -35,7 +35,7 @@ spec:
       serviceAccountName: {{ template "fullname" . }}
       containers:
       - name: {{ template "fullname" . }}
-        image: "{{ .Values.image }}:{{ .Values.imageTag }}"
+        image: "{{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}"
         imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
@@ -79,6 +79,8 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 10
         volumeMounts:
+          - mountPath: /var/lib/artemis-instance/data	
+            name: data
           - name: config
             mountPath: /broker.xml
             subPath: broker.xml

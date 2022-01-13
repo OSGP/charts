@@ -8,6 +8,13 @@ data:
     <configuration xmlns="urn:activemq" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:activemq /schema/artemis-configuration.xsd">
       <core xmlns="urn:activemq:core" xsi:schemaLocation="urn:activemq:core ">
         
+        <persistence-enabled>true</persistence-enabled>	
+        <journal-type>ASYNCIO</journal-type>	
+        <paging-directory>data/paging</paging-directory>	
+        <bindings-directory>data/bindings</bindings-directory>	
+        <journal-directory>data/journal</journal-directory>	
+        <large-messages-directory>data/large-messages</large-messages-directory>
+        
         <security-enabled>false</security-enabled>
         
         <jmx-management-enabled>true</jmx-management-enabled>
@@ -24,6 +31,8 @@ data:
             <address-full-policy>PAGE</address-full-policy>
             <auto-create-queues>true</auto-create-queues>
             <auto-create-addresses>true</auto-create-addresses>
+            <auto-delete-queues>false</auto-delete-queues>	
+            <auto-delete-addresses>false</auto-delete-addresses>
           </address-setting>
           <!--default for catch all-->
           <address-setting match="#">
@@ -36,6 +45,8 @@ data:
             <address-full-policy>PAGE</address-full-policy>
             <auto-create-queues>true</auto-create-queues>
             <auto-create-addresses>true</auto-create-addresses>
+            <auto-delete-queues>false</auto-delete-queues>	
+            <auto-delete-addresses>false</auto-delete-addresses>
           </address-setting>
         </address-settings>
         <addresses>

@@ -7,5 +7,5 @@ metadata:
 data:
   {{- range $name, $data := .Values.config }}
   {{ $name }}: |
-    {{- $data | nindent 4 }}
+    {{- (tpl $data $) | nindent 4 }}
   {{- end }}

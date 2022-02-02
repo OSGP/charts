@@ -68,10 +68,14 @@ spec:
           containerPort: 61617
         - name: jmxexporter
           containerPort: 9404
+        startupProbe:
+          httpGet:
+            port: http
+          failureThreshold: 30
+          periodSeconds: 10
         livenessProbe:
           tcpSocket:
             port: http
-          initialDelaySeconds: 120
           periodSeconds: 10
         readinessProbe:
           tcpSocket:

@@ -32,7 +32,7 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
-      serviceAccountName: {{ template "fullname" . }}
+      serviceAccountName: {{ template "service-account" . }}
       containers:
       - name: {{ template "fullname" . }}
         image: "{{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}"

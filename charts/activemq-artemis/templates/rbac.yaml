@@ -64,7 +64,7 @@ roleRef:
 
 subjects:
   - kind: ServiceAccount
-    name: {{ template "fullname" . }}
+    name: {{ template "service-account" . }}
     namespace: {{ .Release.Namespace }}
 
 {{ end }}

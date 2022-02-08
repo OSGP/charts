@@ -69,11 +69,11 @@ spec:
             name: http
             protocol: TCP
 {{- end }}
-        {{- range .Values.extraPorts }}
-        - containerPort: {{ .port }}
-          name: {{ .name }}
-          protocol: {{ .protocol | default "TCP" }}
-        {{- end }}
+{{- range .Values.extraPorts }}
+          - containerPort: {{ .port }}
+            name: {{ .name }}
+            protocol: {{ .protocol | default "TCP" }}
+{{- end }}
         volumeMounts:
         - name: osgp-config
           mountPath: /etc/osgp

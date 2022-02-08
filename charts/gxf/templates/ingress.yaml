@@ -29,10 +29,10 @@ spec:
 {{- end }}
 {{- range .Values.ingress.hosts }}
   {{- if $ingressGate }}
-  host: {{ . }}
+  host: {{ (tpl . $) }}
   services: 
   {{- else }}
-    - host: {{ . }}
+    - host: {{ (tpl . $) }}
       http:
         paths:
   {{- end }}

@@ -2,12 +2,15 @@
 {{- $releaseName := .Release.Name -}}
 {{- $servicePort := .Values.service.port -}}
 {{- $ingressPaths := .Values.ingress.paths -}}
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
+{{- $ingressGate := .Values.ingress.gate -}}
+{{- $activemqConsole := .Values.ingress.activemqConsole -}}
+apiVersion: {{ if $ingressGate }}gatemin.io/v1alpha1{{ else }}networking.k8s.io/v1beta1{{ end }}
+kind: {{ if $ingressGate }}IngressGate{{ else }}Ingress{{ end }}
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ $releaseName }}
+  namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ .Release.Name }}
+    app: {{ $releaseName }}
 {{- with .Values.ingress.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
@@ -17,16 +20,40 @@ spec:
   tls:
 {{ toYaml .Values.ingress.tls | indent 4 }}
 {{- end }}
+{{- if $ingressGate }}
+  auth:
+    type: NONE
+{{- end }}
+{{- if not $ingressGate }}
   rules:
-  {{- range .Values.ingress.hosts }}
-    - host: {{ . }}
+{{- end }}
+{{- range .Values.ingress.hosts }}
+  {{- if $ingressGate }}
+  host: {{ (tpl . $) }}
+  services: 
+  {{- else }}
+    - host: {{ (tpl . $) }}
       http:
         paths:
-{{- range $ingressPaths }}
+  {{- end }}
+  {{- range $ingressPaths }}
+    {{- if $ingressGate }}
+    - path: {{ . }}
+      backend:
+        serviceName: {{ $releaseName }}
+        servicePort: {{ $servicePort }}
+    {{- else }}
           - path: {{ . }}
             backend:
               serviceName: {{ $releaseName }}
               servicePort: {{ $servicePort }}
+    {{- end }}
   {{- end }}
+  {{- if and $activemqConsole $ingressGate }}
+    - path: /console
+      backend: 
+        serviceName: {{ $releaseName }}-activemq-artemis
+        servicePort: 8161  
   {{- end }}
+{{- end }}
 {{- end }}

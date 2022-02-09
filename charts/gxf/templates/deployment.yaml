@@ -151,6 +151,6 @@ spec:
           defaultMode: 320
 {{- end }}
 {{- if .Values.extraVolumes }}
-{{ toYaml .Values.extraVolumes | indent 6 }}
+{{ toYaml (tpl .Values.extraVolumes $) | indent 6 }}
 {{- end }}
       terminationGracePeriodSeconds: 60

@@ -151,8 +151,12 @@ spec:
           defaultMode: 320
 {{- end }}
 {{- if .Values.extraVolumes }}
+{{- if eq (typeOf .Values.extraVolumes) "[]interface {}"}}
+{{ toYaml .Values.extraVolumes | indent 6 }}
+{{- else if eq (typeOf .Values.extraVolumes) "string" }}
 {{- with .Values.extraVolumes }}
 {{ tpl . $ | indent 6 }}
 {{- end }}
+{{- end}}
 {{- end }}
       terminationGracePeriodSeconds: 60

@@ -96,6 +96,10 @@ spec:
 {{- if .Values.httpdSidecar.enabled }}
       - name: httpd
         image: {{ .Values.httpdSidecar.image }}{{- if .Values.httpdSidecar.imageTag -}}:{{- end -}}{{ .Values.httpdSidecar.imageTag }}
+{{- if .Values.httpdSidecar.resources }}
+        resources: 
+{{ toYaml .Values.httpdSidecar.resources | indent 10 }}
+{{- end }}
         ports:
         - containerPort: 443
         volumeMounts:

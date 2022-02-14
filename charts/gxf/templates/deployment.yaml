@@ -5,6 +5,9 @@ metadata:
   labels:
     app: {{ .Release.Name }}
 spec:
+{{- if .Values.replicas }}
+  replicas: {{ .Values.replicas }}
+{{- end }}
   revisionHistoryLimit: 3
   selector:
     matchLabels:

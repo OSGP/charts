@@ -3,14 +3,6 @@ activemq-artemis:
   persistence:
     enabled: true
 
-  resources:
-    requests:
-      memory: 512Mi
-      cpu: 50m
-    limits:
-      memory: 512Mi
-      cpu: 500m
-
 artemisCloud:
   enabled: false
 

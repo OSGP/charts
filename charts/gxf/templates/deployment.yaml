@@ -27,6 +27,10 @@ spec:
         {{ $key }}: {{ $value }}
         {{- end }}
     spec:
+{{- if .Values.initContainers }}
+      initContainers:
+{{ toYaml .Values.initContainers | indent 8 }}
+{{- end }}
       containers:
       - name: {{ .Release.Name }}
         image: {{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}

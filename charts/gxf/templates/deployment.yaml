@@ -69,7 +69,8 @@ spec:
           - containerPort: 8009
             name: ajp
             protocol: TCP
-{{- else }}
+{{- end }}
+{{- if or (not .Values.httpdSidecar.enabled) (.Values.httpdSidecar.tomcatHttpEnabled) }}
           - containerPort: 8080
             name: http
             protocol: TCP

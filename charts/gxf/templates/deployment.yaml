@@ -173,3 +173,4 @@ spec:
 {{- end}}
 {{- end }}
       terminationGracePeriodSeconds: 60
+      enableServiceLinks: false

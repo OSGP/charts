@@ -8,7 +8,6 @@
 {{- end }}
 {{- $ingressPaths := .Values.ingress.paths -}}
 {{- $ingressGate := .Values.ingress.gate -}}
-{{- $activemqConsole := .Values.ingress.activemqConsole -}}
 apiVersion: {{ if $ingressGate }}gatemin.io/v1alpha1{{ else }}networking.k8s.io/v1beta1{{ end }}
 kind: {{ if $ingressGate }}IngressGate{{ else }}Ingress{{ end }}
 metadata:
@@ -53,12 +52,6 @@ spec:
               serviceName: {{ $releaseName }}
               servicePort: {{ $servicePort }}
     {{- end }}
-  {{- end }}
-  {{- if and $activemqConsole $ingressGate }}
-    - path: /console
-      backend:
-        serviceName: {{ $releaseName }}-activemq-artemis
-        servicePort: 8161
   {{- end }}
 {{- end }}
 {{- end }}

@@ -3,9 +3,9 @@
 {{- $targetPort := 8080 }}
 {{- if .Values.service }}
   {{- $servicePort = .Values.service.port | default $servicePort }}
-{{- end }}
-{{- if .Values.httpdSidecar.enabled }}
-  {{- $servicePort = .Values.service.port | default 443 }}
+  {{- $targetPort = .Values.service.targetPort | default $targetPort }}
+{{- else if .Values.httpdSidecar.enabled }}
+  {{- $servicePort = 443 }}
   {{- $targetPort = 443 -}}
 {{- end }}
 apiVersion: v1

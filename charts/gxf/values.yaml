@@ -21,6 +21,12 @@ imagePullPolicy: IfNotPresent
 
 postgresql:
   enabled: false
+  primary:
+    extraPodSpec:
+      enableServiceLinks: false
+  readReplicas:
+    extraPodSpec:
+      enableServiceLinks: false
 
 resources:
   limits:

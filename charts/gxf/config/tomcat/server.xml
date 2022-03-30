@@ -28,7 +28,8 @@
                keepAliveTimeout="10000"
                prestartminSpareThreads="true"
                secretRequired="false" />
-{{- else }}
+{{- end }}
+{{- if or (not .Values.httpdSidecar.enabled) (.Values.httpdSidecar.tomcatHttpEnabled) }}
     <Connector port="8080"
                protocol="HTTP/1.1"
                maxThreads="800"

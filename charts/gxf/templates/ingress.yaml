@@ -1,6 +1,11 @@
 {{- if .Values.ingress.enabled -}}
 {{- $releaseName := .Release.Name -}}
-{{- $servicePort := .Values.service.port -}}
+{{- $servicePort := 80 -}}
+{{- if .Values.service }}
+  {{- $servicePort = .Values.service.port | default $servicePort -}}
+{{- else if .Values.httpdSidecar.enabled }}
+  {{- $servicePort = 443 -}}
+{{- end }}
 {{- $ingressPaths := .Values.ingress.paths -}}
 {{- $ingressGate := .Values.ingress.gate -}}
 {{- $activemqConsole := .Values.ingress.activemqConsole -}}
@@ -30,7 +35,7 @@ spec:
 {{- range .Values.ingress.hosts }}
   {{- if $ingressGate }}
   host: {{ (tpl . $) }}
-  services: 
+  services:
   {{- else }}
     - host: {{ (tpl . $) }}
       http:
@@ -51,9 +56,9 @@ spec:
   {{- end }}
   {{- if and $activemqConsole $ingressGate }}
     - path: /console
-      backend: 
+      backend:
         serviceName: {{ $releaseName }}-activemq-artemis
-        servicePort: 8161  
+        servicePort: 8161
   {{- end }}
 {{- end }}
 {{- end }}

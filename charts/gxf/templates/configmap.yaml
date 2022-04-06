@@ -32,7 +32,13 @@ data:
           </encoder>
         </appender>
   {{- end }}
-        <root level="INFO" additivity="false">
+
+        <logger name="org.springframework" level="ERROR" />
+        <logger name="org.apache" level="ERROR" />
+        <logger name="com.zaxxer.hikari" level="ERROR" />
+        <logger name="org.quartz" level="ERROR" />
+
+        <root level="{{ .Values.logging.rootLevel }}" additivity="false">
           <appender-ref ref="CONSOLE"/>
   {{- if .Values.logging.toFileEnabled }}
           <appender-ref ref="FILE"/>

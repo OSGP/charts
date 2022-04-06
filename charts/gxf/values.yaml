@@ -80,10 +80,10 @@ ingress:
   #      - hostname.ogsp.cloud
 
 logging:
+  rootLevel: WARN
   # Console logging is always enabled, file logging is optional
   toFileEnabled: false
   # Only used when fileEnabled=true
   # filename: your-own-choosing (defaults to .Release.Name)
   maxHistoryDays: 3
   totalSizeCap: 2GB
-  

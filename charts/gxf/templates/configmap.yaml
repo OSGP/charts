@@ -9,3 +9,34 @@ data:
   {{ $name }}: |
     {{- (tpl $data $) | nindent 4 }}
   {{- end }}
+  logback-global.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+      <configuration>
+
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+          <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [${HOSTNAME}] [%thread] %level %logger{36}@%method:%line - %msg%n</pattern>
+          </encoder>
+        </appender>
+  {{- if .Values.logging.toFileEnabled }}
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+          <file>/var/log/osp/logs/{{ .Values.logging.filename | default .Release.Name }}.log</file>
+          <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/osp/logs/{{ .Values.logging.filename | default .Release.Name }}.log.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>{{ .Values.logging.maxHistoryDays }}</maxHistory>
+            <totalSizeCap>{{ .Values.logging.totalSizeCap }}</totalSizeCap>
+          </rollingPolicy>
+          <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [${HOSTNAME}] [%thread] %level %logger{36}@%method:%line - %msg%n</pattern>
+          </encoder>
+        </appender>
+  {{- end }}
+        <root level="INFO" additivity="false">
+          <appender-ref ref="CONSOLE"/>
+  {{- if .Values.logging.toFileEnabled }}
+          <appender-ref ref="FILE"/>
+  {{- end }}
+        </root>
+
+      </configuration>

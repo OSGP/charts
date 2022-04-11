@@ -80,7 +80,7 @@ ingress:
   #      - hostname.ogsp.cloud
 
 logging:
-  rootLevel: WARN
+  # rootLevel: WARN
   # Console logging is always enabled, file logging is optional
   toFileEnabled: false
   # Only used when fileEnabled=true

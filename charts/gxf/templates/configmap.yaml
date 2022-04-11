@@ -38,7 +38,7 @@ data:
         <logger name="com.zaxxer.hikari" level="ERROR" />
         <logger name="org.quartz" level="ERROR" />
 
-        <root level="{{ .Values.logging.rootLevel }}" additivity="false">
+        <root level="{{ .Values.logging.rootLevel | default "WARN" }}" additivity="false">
           <appender-ref ref="CONSOLE"/>
   {{- if .Values.logging.toFileEnabled }}
           <appender-ref ref="FILE"/>

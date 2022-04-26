@@ -60,7 +60,7 @@ startupProbe:
   initialDelaySeconds: 5
   periodSeconds: 5
   tcpSocket:
-    port: 80
+    port: 8080
 
 efsStorage:
   create: false

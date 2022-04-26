@@ -56,6 +56,12 @@ httpdSidecar:
     initialDelaySeconds: 30
     periodSeconds: 5
 
+startupProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  tcpSocket:
+    port: 80
+
 efsStorage:
   create: false
 

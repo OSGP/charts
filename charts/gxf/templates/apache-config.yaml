@@ -19,7 +19,8 @@ data:
     {{ end }}
     
     Listen 80
-    
+    PidFile /tmp/httpd.pid
+
     LoadModule mpm_event_module modules/mod_mpm_event.so
     LoadModule authn_file_module modules/mod_authn_file.so
     LoadModule authn_core_module modules/mod_authn_core.so
@@ -266,7 +267,7 @@ data:
              nokeepalive ssl-unclean-shutdown \
              downgrade-1.0 force-response-1.0
     
-    CustomLog logs/ssl_request_log \
+    CustomLog /tmp/ssl_request_log \
               "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
     
     </VirtualHost>

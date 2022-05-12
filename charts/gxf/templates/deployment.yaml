@@ -165,7 +165,7 @@ spec:
       - name: apache-server-certs
         secret:
           secretName: {{ .Release.Name }}.apache-server-certs
-          defaultMode: 320
+          defaultMode: 555
 {{- end }}
 {{- if .Values.extraVolumes }}
 {{- if eq (typeOf .Values.extraVolumes) "[]interface {}"}}

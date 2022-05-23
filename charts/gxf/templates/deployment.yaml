@@ -36,34 +36,26 @@ spec:
         image: {{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}
         resources: {{- toYaml .Values.resources | nindent 10 }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
-
         env:
-          - name: NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          - name: APP_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.labels['app']
-          #The environment variables below
-          #are used directly by the application
-          #they are the environment variable versions
-          #of the variables defined in *.properties files.
-          #'db.username' = DB_USERNAME
-          - name: DB_USERNAME
-            value: osp_admin
-          {{- range $key, $value := .Values.extraEnv }}
-          - name: {{ $key }}
-            value: {{ $value }}
-          {{- end }}
-          {{- range .Values.envFromSecrets }}
-          - name: {{ .name }}
-            valueFrom:
-              secretKeyRef:
-                name: {{ .secretName }}
-                key: {{ .secretKey }}
-          {{- end }}
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: APP_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['app']
+        {{- range $key, $value := .Values.extraEnv }}
+        - name: {{ $key }}
+          value: {{ $value }}
+        {{- end }}
+        {{- range $key, $value := .Values.envFromSecrets }}
+        - name: {{ $key }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $value.secretName }}
+              key: {{ $value.secretKey }}
+        {{- end }}
         ports:
 {{- if .Values.httpdSidecar.enabled }}
           - containerPort: 8009

@@ -36,6 +36,14 @@ resources:
     cpu: 500m
     memory: 1Gi
 
+# extraEnv:
+  # YOUR_ENV: your-value
+
+# envFromSecrets:
+  # YOUR_ENV:
+    # secretName: your-secret
+    # secretKey: your-secret-key
+
 httpdSidecar:
   enabled: false
 

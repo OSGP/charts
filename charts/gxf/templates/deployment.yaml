@@ -47,7 +47,7 @@ spec:
               fieldPath: metadata.labels['app']
         {{- range $key, $value := .Values.extraEnv }}
         - name: {{ $key }}
-          value: {{ $value }}
+          value: {{ $value | quote }}
         {{- end }}
         {{- range $key, $value := .Values.envFromSecrets }}
         - name: {{ $key }}

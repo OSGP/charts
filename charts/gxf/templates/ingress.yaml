@@ -22,7 +22,8 @@ metadata:
 spec:
 {{- if .Values.ingress.tls }}
   tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
+    - secretName: {{ .Values.ingress.tls.secretName }}
+      hosts: {{ tpl .Values.ingress.tls.hosts . }}
 {{- end }}
 {{- if $ingressGate }}
   auth:

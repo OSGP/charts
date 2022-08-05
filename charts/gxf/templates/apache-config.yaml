@@ -13,7 +13,7 @@ data:
     
     ServerRoot "/usr/local/apache2"
     {{- if .Values.httpdSidecar.serverName }}
-    ServerName {{ .Values.httpdSidecar.serverName -}}
+    ServerName {{ tpl .Values.httpdSidecar.serverName . -}}
     {{- else }}
     ServerName {{ .Release.Name }}.{{ .Release.Namespace -}}
     {{ end }}
@@ -139,7 +139,7 @@ data:
     
     <VirtualHost *:80>
         {{- if .Values.httpdSidecar.serverName }}
-        ServerName {{ .Values.httpdSidecar.serverName -}}
+        ServerName {{ tpl .Values.httpdSidecar.serverName . -}}
         {{- else }}
         ServerName {{ .Release.Name }}.{{ .Release.Namespace -}}
         {{ end }}
@@ -151,7 +151,7 @@ data:
         {{ range .Values.httpdSidecar.paths }}
         {{- if (not .subpath | default false) }}
         {{ if $.Values.httpdSidecar.serverName }}
-        Redirect permanent /{{ .name }} https://{{ $.Values.httpdSidecar.serverName }}/{{ .name }}
+        Redirect permanent /{{ .name }} https://{{ tpl $.Values.httpdSidecar.serverName $ }}/{{ .name }}
         {{- else -}}
         Redirect permanent /{{ .name }} https://{{ $.Release.Name }}.{{ $.Release.Namespace }}/{{ .name }}
         {{- end -}}
@@ -164,7 +164,7 @@ data:
     
     <VirtualHost *:443>
         {{- if .Values.httpdSidecar.serverName }}
-        ServerName {{ .Values.httpdSidecar.serverName -}}
+        ServerName {{ tpl .Values.httpdSidecar.serverName . -}}
         {{- else }}
         ServerName {{ .Release.Name }}.{{ .Release.Namespace -}}
         {{ end }}
@@ -237,7 +237,7 @@ data:
     
     <VirtualHost _default_:443>
     {{ if .Values.httpdSidecar.serverName }}
-    ServerName {{ .Values.httpdSidecar.serverName -}}
+    ServerName {{ tpl .Values.httpdSidecar.serverName . -}}
     {{- else }}
     ServerName {{ .Release.Name }}.{{ .Release.Namespace -}}
     {{ end }}

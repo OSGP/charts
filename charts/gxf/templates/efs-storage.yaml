@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.efsStorage.name | default .Release.Name }}-pvc
+  name: {{ tpl .Values.efsStorage.name . | default .Release.Name }}-pvc
 spec:
   storageClassName: efs
   accessModes:

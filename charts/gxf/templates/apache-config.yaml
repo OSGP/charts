@@ -151,7 +151,7 @@ data:
         {{ range .Values.httpdSidecar.paths }}
         {{- if (not .subpath | default false) }}
         {{ if $.Values.httpdSidecar.serverName }}
-        Redirect permanent /{{ .name }} https://{{ tpl $.Values.httpdSidecar.serverName . }}/{{ .name }}
+        Redirect permanent /{{ .name }} https://{{ tpl $.Values.httpdSidecar.serverName $ }}/{{ .name }}
         {{- else -}}
         Redirect permanent /{{ .name }} https://{{ $.Release.Name }}.{{ $.Release.Namespace }}/{{ .name }}
         {{- end -}}

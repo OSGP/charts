@@ -53,7 +53,8 @@ spec:
         serviceName: {{ $releaseName }}
         servicePort: {{ $servicePort }}
     {{- else }}
-          - path: {{ . }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
             backend:
               service:
                 name: {{ $releaseName }}

@@ -54,7 +54,7 @@ spec:
         servicePort: {{ $servicePort }}
     {{- else }}
           - path: {{ .path }}
-            pathType: {{ .pathType }}
+            pathType: {{ .pathType | default ImplementationSpecific }}
             backend:
               service:
                 name: {{ $releaseName }}

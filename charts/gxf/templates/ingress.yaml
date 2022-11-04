@@ -48,7 +48,7 @@ spec:
   {{- end }}
   {{- range $ingressPaths }}
     {{- if $ingressGate }}
-    - path: {{ . }}
+    - path: {{ .path }}
       backend:
         serviceName: {{ $releaseName }}
         servicePort: {{ $servicePort }}

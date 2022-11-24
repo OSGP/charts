@@ -17,14 +17,14 @@ spec:
       name: {{ .Release.Name }}
       labels:
         app: {{ .Release.Name }}
-        {{- range $key, $value := .Values.labels }}
-        {{ $key }}: {{ $value }}
-        {{- end }}
+        {{- with .Values.labels}}
+        {{- toYaml . | nindent 8 }}
+        {{- end}}
       annotations:
         prometheus.io/port: '9404'
         prometheus.io/scrape: 'true'
-        {{- range $key, $value := .Values.annotations }}
-        {{ $key }}: {{ $value }}
+        {{- with .Values.annotations }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
 {{- if .Values.initContainers }}

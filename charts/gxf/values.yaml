@@ -64,8 +64,8 @@ httpdSidecar:
     initialDelaySeconds: 30
     periodSeconds: 5
 
-efsStorage:
-  create: false
+pvcStorage:
+  enabled: false
 
 ingress:
   enabled: false

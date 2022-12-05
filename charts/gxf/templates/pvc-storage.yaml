@@ -4,7 +4,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ tpl .Values.pvcStorage.name . | default .Release.Name }}-pvc
 spec:
-  storageClassName: {{ .Values.pvcStorage.class | default "efs" }}
+{{ if .Values.pvcStorage.class }}
+  storageClassName: {{ .Values.pvcStorage.class }}
+{{ end }}
   accessModes:
     - ReadWriteMany
   resources:

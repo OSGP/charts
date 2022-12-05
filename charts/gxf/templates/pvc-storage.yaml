@@ -1,15 +1,15 @@
-{{ if .Values.pvcStorage.enabled }}
+{{- if .Values.pvcStorage.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ tpl .Values.pvcStorage.name . | default .Release.Name }}-pvc
 spec:
-{{ if .Values.pvcStorage.class }}
-  storageClassName: {{ .Values.pvcStorage.class }}
-{{ end }}
+{{- if .Values.pvcStorage.class }}
+  storageClassName: {{ .Values.pvcStorage.class | quote }}
+{{- end }}
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.pvcStorage.Amount | default "5Gi" }}
-{{ end }}
+{{- end }}

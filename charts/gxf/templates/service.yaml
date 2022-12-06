@@ -25,6 +25,9 @@ spec:
     port: {{ .port }}
     targetPort: {{ .targetPort | default .port }}
     protocol: {{ .protocol | default "TCP" }}
+  {{- if .nodePort }}
+    nodePort: {{ .nodePort }}
+  {{- end }}
   {{- end }}
 
   selector:

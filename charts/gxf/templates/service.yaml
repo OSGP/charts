@@ -5,9 +5,7 @@
 {{- if .Values.service -}}
   {{- $servicePort = .Values.service.port | default $servicePort -}}
   {{- $targetPort = .Values.service.targetPort | default $targetPort -}}
-  {{- if .Values.service.type -}}
-    {{- $type = .Values.service.type | default $type -}}
-  {{- end }}
+  {{- $type = .Values.service.type | default $type -}}
 {{- else if .Values.httpdSidecar.enabled -}}
   {{- $servicePort = 443 -}}
   {{- $targetPort = 443 -}}

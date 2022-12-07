@@ -1,11 +1,9 @@
 {{- $releaseName := .Release.Name -}}
 {{- $servicePort := 80 -}}
 {{- $targetPort := 8080 -}}
-{{- $type := "ClusterIP" -}}
 {{- if .Values.service -}}
   {{- $servicePort = .Values.service.port | default $servicePort -}}
   {{- $targetPort = .Values.service.targetPort | default $targetPort -}}
-  {{- $type = .Values.service.type | default $type -}}
 {{- else if .Values.httpdSidecar.enabled -}}
   {{- $servicePort = 443 -}}
   {{- $targetPort = 443 -}}
@@ -17,7 +15,7 @@ metadata:
   labels:
     app: {{ $releaseName }}
 spec:
-  type: {{ $type }}
+  type: {{ ( .Values.service).type | default "ClusterIP" }}
   ports:
   - name: {{ $releaseName }}
     port: {{ $servicePort }}

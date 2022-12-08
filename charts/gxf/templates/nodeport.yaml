@@ -1,16 +1,15 @@
 {{- if .Values.nodePorts }}
-{{- $releaseName := .Release.Name -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $releaseName }}-nodeport
+  name: {{ $.Release.Name }}-nodeport
   labels:
-    app: {{ $releaseName }}-nodeport
+    app: {{ $.Release.Name }}-nodeport
 spec:
   type: NodePort
   ports: 
   {{- range .Values.nodePorts }}
-  - name: {{ $releaseName }}-{{ .name }}
+  - name: {{ $.Release.Name }}-{{ .name }}
     port: {{ .port }}
     targetPort: {{ .targetPort | default .port }}
     protocol: {{ .protocol | default "TCP" }}
@@ -20,5 +19,5 @@ spec:
   {{- end }}
 
   selector:
-    app: {{ $releaseName }}
+    app: {{ $.Release.Name }}
 {{- end }}

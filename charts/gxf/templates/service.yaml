@@ -15,7 +15,6 @@ metadata:
   labels:
     app: {{ $releaseName }}
 spec:
-  type: {{ ( .Values.service).type | default "ClusterIP" }}
   ports:
   - name: {{ $releaseName }}
     port: {{ $servicePort }}
@@ -26,9 +25,6 @@ spec:
     port: {{ .port }}
     targetPort: {{ .targetPort | default .port }}
     protocol: {{ .protocol | default "TCP" }}
-  {{- if .nodePort }}
-    nodePort: {{ .nodePort }}
-  {{- end }}
   {{- end }}
 
 

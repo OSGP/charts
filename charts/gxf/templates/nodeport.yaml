@@ -1,0 +1,24 @@
+{{- if .Values.nodePorts }}
+{{- $releaseName := .Release.Name -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $releaseName }}-nodeport
+  labels:
+    app: {{ $releaseName }}-nodeport
+spec:
+  type: NodePort
+  ports: 
+  {{- range .Values.nodePorts }}
+  - name: {{ $releaseName }}-{{ .name }}
+    port: {{ .port }}
+    targetPort: {{ .targetPort | default .port }}
+    protocol: {{ .protocol | default "TCP" }}
+  {{- if .nodePort }}
+    nodePort: {{ .nodePort }}
+  {{- end }}
+  {{- end }}
+
+  selector:
+    app: {{ $releaseName }}
+{{- end }}

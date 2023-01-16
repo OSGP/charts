@@ -24,7 +24,7 @@ jobs:
         run: |
           changed=$(ct list-changed  --config .github/ct.yaml)
           if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
+            echo "name=changed::true" >> $GITHUB_STATE
           fi
         
       - name: Run chart-testing (lint)

@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
         
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.7
         
@@ -24,7 +24,7 @@ jobs:
         run: |
           changed=$(ct list-changed  --config .github/ct.yaml)
           if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
+            echo "name=changed::true" >> $GITHUB_STATE
           fi
         
       - name: Run chart-testing (lint)
@@ -69,7 +69,7 @@ jobs:
 #        with:
 #          node_image: kindest/node:${{ matrix.k8s }}
 #
-#      - uses: actions/setup-python@v2
+#      - uses: actions/setup-python@v4
 #        with:
 #          python-version: 3.7
 #

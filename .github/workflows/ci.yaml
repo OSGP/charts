@@ -3,7 +3,7 @@ name: Lint and Test Charts
 on:
   pull_request:
     paths:
-      - 'charts/**'
+      - '**'
 
 jobs:
   lint-chart:
@@ -26,7 +26,7 @@ jobs:
           if [[ -n "$changed" ]]; then
             echo "name=changed::true" >> $GITHUB_STATE
           fi
-        
+
       - name: Run chart-testing (lint)
         run: ct lint --config .github/ct.yaml
 

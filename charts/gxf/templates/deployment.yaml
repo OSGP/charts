@@ -112,13 +112,13 @@ spec:
             port: 9404
             path: /metrics
 {{- else }}
-{{- if .Values.readinessProbe }}
-        readinessProbe:
-{{ toYaml .Values.readinessProbe | indent 10 }}
-{{- end }}
 {{- if .Values.startupProbe }}
         startupProbe:
 {{ toYaml .Values.startupProbe | indent 10 }}
+{{- end }}
+{{- if .Values.readinessProbe }}
+        readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 10 }}
 {{- end }}
 {{- if .Values.livenessProbe }}
         livenessProbe:

@@ -87,6 +87,9 @@ ingress:
   #    hosts:
   #      - hostname.ogsp.cloud
 
+route:
+  enabled: false
+
 logging:
   # rootLevel: WARN
   # Console logging is always enabled, file logging is optional

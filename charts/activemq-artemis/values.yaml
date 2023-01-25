@@ -1,6 +1,7 @@
 ## activemq-artemis image version
 ## ref: https://hub.docker.com/r/vromero/activemq-artemis/tags
 ##
+imageRepo: ""
 image: apache/activemq-artemis
 imageTag: latest
 

@@ -31,13 +31,17 @@ spec:
         {{- end }}
     spec:
       serviceAccountName: {{ .Values.serviceAccountName | default "default" }}
+      {{- if .Values.imagePullSecret }}
+      imagePullSecrets:
+        - {{ .Values.imagePullSecret }}
+      {{- end }}
 {{- if .Values.initContainers }}
       initContainers:
 {{ toYaml .Values.initContainers | indent 8 }}
 {{- end }}
       containers:
       - name: {{ .Release.Name }}
-        image: {{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}
+        image: {{ .Values.imageRepo }}{{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}
         resources: {{- toYaml .Values.resources | nindent 10 }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         env:
@@ -129,7 +133,7 @@ spec:
       - name: httpd
         image: {{ .Values.httpdSidecar.image }}{{- if .Values.httpdSidecar.imageTag -}}:{{- end -}}{{ .Values.httpdSidecar.imageTag }}
 {{- if .Values.httpdSidecar.resources }}
-        resources: 
+        resources:
 {{ toYaml .Values.httpdSidecar.resources | indent 10 }}
 {{- end }}
         ports:

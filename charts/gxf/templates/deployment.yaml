@@ -41,7 +41,7 @@ spec:
 {{- end }}
       containers:
       - name: {{ .Release.Name }}
-        image: {{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}
+        image: {{ .Values.imageRepo }}{{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}
         resources: {{- toYaml .Values.resources | nindent 10 }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         env:

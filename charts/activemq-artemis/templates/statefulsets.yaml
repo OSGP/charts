@@ -28,6 +28,10 @@ spec:
         prometheus.io/port: '9404'
         prometheus.io/scrape: 'true'
     spec:
+      {{- if .Values.imagePullSecret }}
+      imagePullSecrets:
+        - {{ .Values.imagePullSecret }}
+      {{- end }}
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000

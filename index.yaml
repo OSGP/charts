@@ -25,6 +25,31 @@ entries:
     version: 1.2.0
   activemq-artemis:
   - apiVersion: v2
+    created: "2023-01-26T13:34:59.21504691Z"
+    description: a multi-protocol, embeddable, very high performance, clustered, asynchronous
+      messaging system.
+    digest: f8ecccb1f42c809edebcf71d5fdf081f55c85e919cda51d16975fe858b258465
+    home: https://activemq.apache.org/artemis/
+    icon: https://activemq.apache.org/artemis/images/activemq-logo.png
+    keywords:
+    - activemq
+    - artemis
+    - messaging
+    - mom
+    - amqp
+    - jms
+    maintainers:
+    - email: gxf@lists.lfenergy.org
+      name: OSGP
+      url: https://www.lfenergy.org/projects/gxf/
+    name: activemq-artemis
+    sources:
+    - https://github.com/kubernetes/charts
+    - https://github.com/apache/activemq-artemis
+    urls:
+    - https://github.com/OSGP/charts/releases/download/activemq-artemis-0.0.15/activemq-artemis-0.0.15.tgz
+    version: 0.0.15
+  - apiVersion: v2
     created: "2023-01-19T12:56:33.164717335Z"
     description: a multi-protocol, embeddable, very high performance, clustered, asynchronous
       messaging system.
@@ -275,6 +300,28 @@ entries:
     - https://github.com/OSGP/charts/releases/download/activemq-artemis-0.0.5/activemq-artemis-0.0.5.tgz
     version: 0.0.5
   gxf:
+  - apiVersion: v2
+    created: "2023-01-26T13:34:59.427919624Z"
+    dependencies:
+    - condition: activemq-artemis.enabled
+      name: activemq-artemis
+      repository: https://osgp.github.io/charts/
+      version: 0.0.*
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.1.9
+    description: Generic GXF Helm chart
+    digest: 20d4e23ed34612f1cd3968a4c60d0f2993bc1b93c7ebf321a3ca7986890d1b89
+    icon: https://artwork.lfenergy.org/projects/grid-exchange-fabric/abbrev/color/grid-exchange-fabric-abbrev-color.png
+    maintainers:
+    - email: gxf@lists.lfenergy.org
+      name: OSGP
+      url: https://www.lfenergy.org/projects/gxf/
+    name: gxf
+    urls:
+    - https://github.com/OSGP/charts/releases/download/gxf-1.2.48/gxf-1.2.48.tgz
+    version: 1.2.48
   - apiVersion: v2
     created: "2023-01-25T14:07:23.341876668Z"
     dependencies:
@@ -1287,4 +1334,4 @@ entries:
     urls:
     - https://github.com/OSGP/charts/releases/download/gxf-1.2.1/gxf-1.2.1.tgz
     version: 1.2.1
-generated: "2023-01-25T14:07:23.342366129Z"
+generated: "2023-01-26T13:34:59.428670826Z"

@@ -131,7 +131,7 @@ spec:
 {{- end }}
 {{- if .Values.httpdSidecar.enabled }}
       - name: httpd
-        image: {{ .Values.httpdSidecar.image }}{{- if .Values.httpdSidecar.imageTag -}}:{{- end -}}{{ .Values.httpdSidecar.imageTag }}
+        image: {{ .Values.httpdSidecar.imageRepo }}{{ .Values.httpdSidecar.image }}{{- if .Values.httpdSidecar.imageTag -}}:{{- end -}}{{ .Values.httpdSidecar.imageTag }}
 {{- if .Values.httpdSidecar.resources }}
         resources:
 {{ toYaml .Values.httpdSidecar.resources | indent 10 }}

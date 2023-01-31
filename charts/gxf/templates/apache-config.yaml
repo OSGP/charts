@@ -129,12 +129,7 @@ data:
     Include conf/extra/httpd-vhosts.conf
     
     Include conf/extra/httpd-ssl.conf
-    
-    <IfModule ssl_module>
-    SSLRandomSeed startup builtin
-    SSLRandomSeed connect builtin
-    </IfModule>
-    
+
   vhosts.conf: |
     
     <VirtualHost *:80>
@@ -222,7 +217,6 @@ data:
     </VirtualHost>
     
   ssl.conf: |
-    
     SSLPassPhraseDialog |/certs/server-key-password
     
     SSLSessionCache         shmcb:/var/cache/mod_ssl/scache(512000)
@@ -234,41 +228,5 @@ data:
     SSLRandomSeed connect builtin
     
     SSLCryptoDevice builtin
-    
-    <VirtualHost _default_:443>
-    {{ if .Values.httpdSidecar.serverName }}
-    ServerName {{ tpl .Values.httpdSidecar.serverName . -}}
-    {{- else }}
-    ServerName {{ .Release.Name }}.{{ .Release.Namespace -}}
-    {{ end }}
-    
-    LogLevel warn
-    
-    SSLEngine on
-    
-    SSLProtocol -all +TLSv1.2 -TLSv1.3
-    
-    SSLCipherSuite DEFAULT:!EXP:!SSLv2:!DES:!IDEA:!SEED:+3DES
-    
-    SSLCertificateFile /certs/server.crt
-    
-    SSLCertificateKeyFile /certs/server.key
-    
-    SSLCACertificateFile /certs/root.crt
-    
-    <Files ~ "\.(cgi|shtml|phtml|php3?)$">
-        SSLOptions +StdEnvVars
-    </Files>
-    <Directory "/var/www/cgi-bin">
-        SSLOptions +StdEnvVars
-    </Directory>
-    
-    SetEnvIf User-Agent ".*MSIE.*" \
-             nokeepalive ssl-unclean-shutdown \
-             downgrade-1.0 force-response-1.0
-    
-    CustomLog /tmp/ssl_request_log \
-              "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
-    
-    </VirtualHost>
+
 {{ end }}

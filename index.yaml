@@ -25,6 +25,31 @@ entries:
     version: 1.2.0
   activemq-artemis:
   - apiVersion: v2
+    created: "2023-02-01T12:06:33.916603508Z"
+    description: a multi-protocol, embeddable, very high performance, clustered, asynchronous
+      messaging system.
+    digest: d44d68b64fb3f36dbb8e602ad76beff5ea789473cec681b2c4b613cc8d0b2862
+    home: https://activemq.apache.org/artemis/
+    icon: https://activemq.apache.org/artemis/images/activemq-logo.png
+    keywords:
+    - activemq
+    - artemis
+    - messaging
+    - mom
+    - amqp
+    - jms
+    maintainers:
+    - email: gxf@lists.lfenergy.org
+      name: OSGP
+      url: https://www.lfenergy.org/projects/gxf/
+    name: activemq-artemis
+    sources:
+    - https://github.com/kubernetes/charts
+    - https://github.com/apache/activemq-artemis
+    urls:
+    - https://github.com/OSGP/charts/releases/download/activemq-artemis-0.0.17/activemq-artemis-0.0.17.tgz
+    version: 0.0.17
+  - apiVersion: v2
     created: "2023-01-26T14:06:26.158031582Z"
     description: a multi-protocol, embeddable, very high performance, clustered, asynchronous
       messaging system.
@@ -1359,4 +1384,4 @@ entries:
     urls:
     - https://github.com/OSGP/charts/releases/download/gxf-1.2.1/gxf-1.2.1.tgz
     version: 1.2.1
-generated: "2023-01-26T14:06:26.158827618Z"
+generated: "2023-02-01T12:06:33.917044609Z"

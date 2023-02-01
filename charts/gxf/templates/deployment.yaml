@@ -143,11 +143,8 @@ spec:
           mountPath: /usr/local/apache2/conf/httpd.conf
           subPath: httpd.conf
         - name: apache-config
-          mountPath: /usr/local/apache2/conf/extra/httpd-vhosts.conf
+          mountPath: /usr/local/apache2/conf/extra/vhosts.conf
           subPath: vhosts.conf
-        - name: apache-config
-          mountPath: /usr/local/apache2/conf/extra/httpd-ssl.conf
-          subPath: ssl.conf
         - name: apache-server-certs
           mountPath: /certs
 {{- if .Values.httpdSidecar.extraVolumeMounts }}

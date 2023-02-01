@@ -112,9 +112,19 @@ data:
         AddType application/x-gzip .gz .tgz
     </IfModule>
 
-    Include conf/extra/httpd-vhosts.conf
+    Include conf/extra/vhosts.conf
 
-    Include conf/extra/httpd-ssl.conf
+    SSLPassPhraseDialog |/certs/server-key-password
+
+    SSLSessionCache         shmcb:/var/cache/mod_ssl/scache(512000)
+    SSLSessionCacheTimeout  300
+
+    Mutex default
+
+    SSLRandomSeed startup file:/dev/urandom  256
+    SSLRandomSeed connect builtin
+
+    SSLCryptoDevice builtin
 
   vhosts.conf: |
 
@@ -189,18 +199,4 @@ data:
         {{- end }}
 
     </VirtualHost>
-
-  ssl.conf: |
-    SSLPassPhraseDialog |/certs/server-key-password
-
-    SSLSessionCache         shmcb:/var/cache/mod_ssl/scache(512000)
-    SSLSessionCacheTimeout  300
-
-    Mutex default
-
-    SSLRandomSeed startup file:/dev/urandom  256
-    SSLRandomSeed connect builtin
-
-    SSLCryptoDevice builtin
-
 {{ end }}

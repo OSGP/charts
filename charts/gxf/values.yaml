@@ -2,6 +2,8 @@ imageTag: latest
 replicas: 1
 serviceAccountName: default
 enableDefaultProbes: false
+service:
+  port: 80
 
 startupProbe:
   enabled: true

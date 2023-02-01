@@ -1,4 +1,3 @@
-{{- $servicePort := .Values.service.port -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -6,7 +5,7 @@ metadata:
 spec:
   ports:
     - name: {{ .Release.Name }}
-      port: {{ $servicePort }}
+      port: {{ .Values.service.port }}
       {{- if .Values.httpdSidecar.enabled }}
       targetPort: https
       {{- else }}

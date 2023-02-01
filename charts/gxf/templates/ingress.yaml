@@ -1,9 +1,6 @@
 {{- if .Values.ingress.enabled -}}
 {{- $releaseName := .Release.Name -}}
 {{- $servicePort := .Values.service.port -}}
-{{- if .Values.httpdSidecar.enabled }}
-  {{- $servicePort = 443 -}}
-{{- end }}
 {{- $ingressPaths := .Values.ingress.paths -}}
 {{- $ingressGate := .Values.ingress.gate -}}
 apiVersion: {{ if $ingressGate }}gatemin.io/v1alpha1{{ else }}networking.k8s.io/v1{{ end }}
@@ -11,8 +8,6 @@ kind: {{ if $ingressGate }}IngressGate{{ else }}Ingress{{ end }}
 metadata:
   name: {{ $releaseName }}
   namespace: {{ .Release.Namespace }}
-  labels:
-    app: {{ $releaseName }}
 {{- with .Values.ingress.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}

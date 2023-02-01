@@ -6,26 +6,18 @@ service:
   port: 80
 
 startupProbe:
-  enabled: true
   failureThreshold: 30
   periodSeconds: 5
   httpGet:
     port: 8080
     path: /probe/probe.txt
-readinessProbe:
-  enabled: true
-  failureThreshold: 6
-  periodSeconds: 5
-  httpGet:
-    port: 9404
-    path: /metrics
 livenessProbe:
-  enabled: true
   failureThreshold: 6
   periodSeconds: 5
   httpGet:
     port: 9404
     path: /metrics
+readinessProbe: {}
 
 activemq-artemis:
   enabled: false

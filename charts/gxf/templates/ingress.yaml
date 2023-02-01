@@ -1,59 +1,34 @@
-{{- if .Values.ingress.enabled -}}
-{{- $releaseName := .Release.Name -}}
-{{- $servicePort := .Values.service.port -}}
-{{- $ingressPaths := .Values.ingress.paths -}}
-{{- $ingressGate := .Values.ingress.gate -}}
-apiVersion: {{ if $ingressGate }}gatemin.io/v1alpha1{{ else }}networking.k8s.io/v1{{ end }}
-kind: {{ if $ingressGate }}IngressGate{{ else }}Ingress{{ end }}
+{{- if (and .Values.ingress.enabled (not .Values.ingress.gate)) -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: {{ $releaseName }}
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
-{{- with .Values.ingress.annotations }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+  annotations: {{- toYaml .Values.ingress.annotations | nindent 4 }}
 spec:
-{{- if .Values.ingress.tls }}
+  {{- if .Values.ingress.tls }}
   tls:
-{{- range .Values.ingress.tls }}
+    {{- range .Values.ingress.tls }}
     - hosts:
-{{- range .hosts }}
+      {{- range .hosts }}
         - {{ tpl . $ }}
-{{- end }}
+      {{- end }}
       secretName: {{ .secretName }}
-{{- end }}
-{{- end }}
-{{- if $ingressGate }}
-  auth:
-    type: NONE
-{{- end }}
-{{- if not $ingressGate }}
+    {{- end }}
+  {{- end }}
   rules:
-{{- end }}
-{{- range .Values.ingress.hosts }}
-  {{- if $ingressGate }}
-  host: {{ (tpl . $) }}
-  services:
-  {{- else }}
+  {{- range .Values.ingress.hosts }}
     - host: {{ (tpl . $) }}
       http:
         paths:
-  {{- end }}
-  {{- range $ingressPaths }}
-    {{- if $ingressGate }}
-    - path: {{ .path }}
-      backend:
-        serviceName: {{ $releaseName }}
-        servicePort: {{ $servicePort }}
-    {{- else }}
+          {{- range $.Values.ingress.paths }}
           - path: {{ .path }}
             pathType: {{ .pathType | default "ImplementationSpecific" }}
             backend:
               service:
-                name: {{ $releaseName }}
+                name: {{ $.Release.Name }}
                 port:
-                  number: {{ $servicePort }}
-    {{- end }}
+                  number: {{ $.Values.service.port }}
+          {{- end }}
   {{- end }}
-{{- end }}
 {{- end }}

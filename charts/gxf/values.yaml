@@ -25,11 +25,6 @@ livenessProbe:
     port: 9404
     path: /metrics
 
-service:
-  port: 80
-  targetPort: 8080
-
-
 activemq-artemis:
   enabled: false
   persistence:
@@ -77,25 +72,12 @@ resources:
     # secretKey: your-secret-key
 
 httpdSidecar:
-  enabled: false
+  enabled: true
   imageTag: latest
 
   image: httpd:2.4.52-alpine
 
-  readinessProbe:
-    httpGet:
-      path: /
-      port: 443
-      scheme: HTTPS
-    initialDelaySeconds: 30
-    periodSeconds: 5
-  livenessProbe:
-    httpGet:
-      path: /
-      port: 443
-      scheme: HTTPS
-    initialDelaySeconds: 30
-    periodSeconds: 5
+  port: 8002
 
 pvcStorage:
   enabled: false

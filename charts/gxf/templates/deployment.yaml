@@ -70,7 +70,7 @@ spec:
             protocol: TCP
         {{- end }}
         {{- if or (not .Values.httpdSidecar.enabled) (.Values.httpdSidecar.tomcatHttpEnabled) }}
-          - containerPort: {{ .Values.service.targetPort }}
+          - containerPort: 8080
             name: http
             protocol: TCP
         {{- end }}
@@ -109,7 +109,9 @@ spec:
         resources: {{- toYaml .Values.httpdSidecar.resources | nindent 10 }}
         {{- end }}
         ports:
-        - containerPort: {{ .Values.service.targetPort }}
+        - name: https
+          containerPort: {{ .Values.httpdSidecar.port }}
+          protocol: TCP
         volumeMounts:
         - name: apache-config
           mountPath: /usr/local/apache2/conf/httpd.conf
@@ -122,8 +124,13 @@ spec:
         {{- if .Values.httpdSidecar.extraVolumeMounts }}
         {{- toYaml .Values.httpdSidecar.extraVolumeMounts | nindent 8 }}
         {{- end }}
-        readinessProbe: {{- toYaml .Values.httpdSidecar.readinessProbe | nindent 10 }}
-        livenessProbe: {{- toYaml .Values.httpdSidecar.livenessProbe | nindent 10 }}
+        readinessProbe:
+          httpGet:
+            path: /server-status
+            port: https
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 10
       {{- end }}
       affinity:
         podAntiAffinity:

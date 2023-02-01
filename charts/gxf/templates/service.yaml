@@ -1,5 +1,4 @@
 {{- $servicePort := .Values.service.port -}}
-{{- $targetPort := .Values.service.targetPort -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -8,7 +7,11 @@ spec:
   ports:
     - name: {{ .Release.Name }}
       port: {{ $servicePort }}
-      targetPort: {{ $targetPort }}
+      {{- if .Values.httpdSidecar.enabled }}
+      targetPort: https
+      {{- else }}
+      targetPort: http
+      {{- end }}
       protocol: TCP
     {{- range .Values.extraServicePorts }}
     - name: {{ $.Release.Name }}-{{ .name }}

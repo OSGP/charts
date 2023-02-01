@@ -13,7 +13,6 @@ metadata:
   name: {{ .Release.Name }}-apache
 data:
   httpd.conf: |
-
     ServerRoot "/usr/local/apache2"
     ServerName {{ $serverName }}
 
@@ -29,14 +28,11 @@ data:
     LoadModule access_compat_module modules/mod_access_compat.so
     LoadModule auth_basic_module modules/mod_auth_basic.so
     LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
-    LoadModule reqtimeout_module modules/mod_reqtimeout.so
-    LoadModule filter_module modules/mod_filter.so
     LoadModule mime_module modules/mod_mime.so
     LoadModule log_config_module modules/mod_log_config.so
     LoadModule env_module modules/mod_env.so
     LoadModule headers_module modules/mod_headers.so
     LoadModule setenvif_module modules/mod_setenvif.so
-    LoadModule version_module modules/mod_version.so
     LoadModule proxy_module modules/mod_proxy.so
     LoadModule proxy_http_module modules/mod_proxy_http.so
     LoadModule proxy_ajp_module modules/mod_proxy_ajp.so
@@ -45,35 +41,19 @@ data:
     LoadModule status_module modules/mod_status.so
     LoadModule rewrite_module modules/mod_rewrite.so
 
-    <IfModule unixd_module>
-        User daemon
-        Group daemon
-    </IfModule>
+    User daemon
+    Group daemon
 
     ServerAdmin you@example.com
 
     ErrorLog /proc/self/fd/2
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+    LogFormat "%h %l %u %t \"%r\" %>s %b" common
 
-    LogLevel warn
-
-    <IfModule log_config_module>
-        LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
-        LogFormat "%h %l %u %t \"%r\" %>s %b" common
-        CustomLog /proc/self/fd/1 common
-    </IfModule>
-
-    <IfModule headers_module>
-        RequestHeader unset Proxy early
-    </IfModule>
-
-    <IfModule mime_module>
-        TypesConfig conf/mime.types
-
-        AddType application/x-compress .Z
-        AddType application/x-gzip .gz .tgz
-    </IfModule>
-
-    Include conf/extra/vhosts.conf
+    RequestHeader unset Proxy early
+    TypesConfig conf/mime.types
+    AddType application/x-compress .Z
+    AddType application/x-gzip .gz .tgz
 
     SSLPassPhraseDialog |/certs/server-key-password
 
@@ -87,10 +67,12 @@ data:
 
     SSLCryptoDevice builtin
 
-  vhosts.conf: |
-    Listen {{.Values.service.targetPort}}
+    Include conf/extra/vhosts.conf
 
-    <VirtualHost *:{{.Values.service.targetPort}}>
+  vhosts.conf: |
+    Listen {{ .Values.httpdSidecar.port }}
+
+    <VirtualHost *:{{ .Values.httpdSidecar.port }}>
         ServerName {{ $serverName }}
         ErrorLog /tmp/osp_error.log
         LogLevel warn
@@ -111,21 +93,16 @@ data:
 
         RewriteCond %{QUERY_STRING} transport=websocket    [NC]
 
-        <Directory />
-            Options -Indexes
-            AllowOverride all
-            Order allow,deny
-            allow from all
-        </Directory>
+        {{range .Values.httpdSidecar.paths }}
+        {{ if (not .subpath | default false) -}}
+        ProxyPass /{{ .name }} ajp://localhost:8009/{{ .name }}
+        ProxyPassReverse /{{ .name }} /{{ .name }}
+        {{ end -}}
+        {{ end }}
 
-        <IfModule mod_proxy_ajp.c>
-            {{range .Values.httpdSidecar.paths }}
-            {{ if (not .subpath | default false) -}}
-            ProxyPass /{{ .name }} ajp://localhost:8009/{{ .name }}
-            ProxyPassReverse /{{ .name }} /{{ .name }}
-            {{ end -}}
-            {{ end }}
-        </IfModule>
+        <Location /server-status>
+            SetHandler server-status
+        </Location>
 
         {{range .Values.httpdSidecar.paths }}
         {{ if .properties }}

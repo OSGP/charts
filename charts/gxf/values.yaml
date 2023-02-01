@@ -25,6 +25,11 @@ livenessProbe:
     port: 9404
     path: /metrics
 
+service:
+  port: 80
+  targetPort: 8080
+
+
 activemq-artemis:
   enabled: false
   persistence:

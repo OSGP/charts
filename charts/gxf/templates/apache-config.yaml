@@ -19,7 +19,6 @@ data:
     ServerRoot "/usr/local/apache2"
     ServerName {{ $serverName }}
 
-    Listen 80
     PidFile /tmp/httpd.pid
 
     LoadModule mpm_event_module modules/mod_mpm_event.so
@@ -86,13 +85,10 @@ data:
         </IfModule>
 
         CustomLog /proc/self/fd/1 common
-
     </IfModule>
 
     <IfModule alias_module>
-
         ScriptAlias /cgi-bin/ "/usr/local/apache2/cgi-bin/"
-
     </IfModule>
 
     <Directory "/usr/local/apache2/cgi-bin">
@@ -127,22 +123,6 @@ data:
     SSLCryptoDevice builtin
 
   vhosts.conf: |
-
-    <VirtualHost *:80>
-        ServerName {{ $serverName }}
-
-        <Location /server-status>
-            SetHandler server-status
-        </Location>
-
-        {{ range .Values.httpdSidecar.paths }}
-        {{- if (not .subpath | default false) }}
-        Redirect permanent /{{ .name }} https://{{ $serverName }}/{{ .name }}
-        {{- end -}}
-        {{- end }}
-
-    </VirtualHost>
-
     Listen 443
 
     <VirtualHost *:443>

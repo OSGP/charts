@@ -1,8 +1,5 @@
 {{- $servicePort := .Values.service.port -}}
 {{- $targetPort := .Values.service.targetPort -}}
-{{- if .Values.httpdSidecar.enabled -}}
-  {{- $targetPort = 443 -}}
-{{- end -}}
 apiVersion: v1
 kind: Service
 metadata:

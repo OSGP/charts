@@ -1,13 +1,13 @@
 {{- $releaseName := .Release.Name -}}
 {{- $servicePort := 80 -}}
-{{- $targetPort := 8080 }}
-{{- if .Values.service }}
-  {{- $servicePort = .Values.service.port | default $servicePort }}
-  {{- $targetPort = .Values.service.targetPort | default $targetPort }}
-{{- else if .Values.httpdSidecar.enabled }}
-  {{- $servicePort = 443 }}
+{{- $targetPort := 8080 -}}
+{{- if .Values.service -}}
+  {{- $servicePort = .Values.service.port | default $servicePort -}}
+  {{- $targetPort = .Values.service.targetPort | default $targetPort -}}
+{{- else if .Values.httpdSidecar.enabled -}}
+  {{- $servicePort = 443 -}}
   {{- $targetPort = 443 -}}
-{{- end }}
+{{- end -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -26,6 +26,7 @@ spec:
     targetPort: {{ .targetPort | default .port }}
     protocol: {{ .protocol | default "TCP" }}
   {{- end }}
+
 
   selector:
     app: {{ $releaseName }}

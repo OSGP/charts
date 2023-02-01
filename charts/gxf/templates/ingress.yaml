@@ -8,7 +8,7 @@
 {{- end }}
 {{- $ingressPaths := .Values.ingress.paths -}}
 {{- $ingressGate := .Values.ingress.gate -}}
-apiVersion: {{ if $ingressGate }}gatemin.io/v1alpha1{{ else }}networking.k8s.io/v1beta1{{ end }}
+apiVersion: {{ if $ingressGate }}gatemin.io/v1alpha1{{ else }}networking.k8s.io/v1{{ end }}
 kind: {{ if $ingressGate }}IngressGate{{ else }}Ingress{{ end }}
 metadata:
   name: {{ $releaseName }}
@@ -48,15 +48,18 @@ spec:
   {{- end }}
   {{- range $ingressPaths }}
     {{- if $ingressGate }}
-    - path: {{ . }}
+    - path: {{ .path }}
       backend:
         serviceName: {{ $releaseName }}
         servicePort: {{ $servicePort }}
     {{- else }}
-          - path: {{ . }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "ImplementationSpecific" }}
             backend:
-              serviceName: {{ $releaseName }}
-              servicePort: {{ $servicePort }}
+              service:
+                name: {{ $releaseName }}
+                port:
+                  number: {{ $servicePort }}
     {{- end }}
   {{- end }}
 {{- end }}

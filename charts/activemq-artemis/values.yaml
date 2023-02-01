@@ -40,12 +40,45 @@ resources:
     memory: 512Mi
     cpu: 500m
 
+brokerConfiguration:
+  parameters:
+    persistence-enabled: true
+    journal-type: ASYNCIO
+    paging-directory: data/paging
+    bindings-directory: data/bindings
+    journal-directory: data/journal
+    large-messages-directory: data/large-messages
+    critical-analyzer-timeout: 600000
+    security-enabled: false
+    jmx-management-enabled: true
+  addresses:
+    'activemq.management#':
+      dead-letter-address: DLQ
+      expiry-address: ExpiryQueue
+      redelivery-delay: 0
+      max-size-bytes: -1
+      message-counter-history-day-limit: 10
+      address-full-policy: PAGE
+      auto-create-queues: true
+      auto-create-addresses: true
+      auto-delete-queues: true
+      auto-delete-addresses: true
+    '#':
+      dead-letter-address: DLQ
+      expiry-address: ExpiryQueue
+      max-size-bytes: -1
+      message-counter-history-day-limit: 10
+      address-full-policy: PAGE
+      max-delivery-attempts: -1
+      max-redelivery-delay: 3600000 # 1 hour
+      redelivery-delay: 60000 # 1 minute
+      redelivery-delay-multiplier: 2
+      auto-create-queues: true
+      auto-create-addresses: true
+      auto-delete-queues: true
+      auto-delete-addresses: true
+
 ## Install Default RBAC roles and bindings
 rbac:
   install: false
   apiVersion: v1
-
-# A load balander might confuse Minikube when installing with Helm and --wait
-# Probably this is only useful for minikube environments
-loadbalancer:
-  enabled: false

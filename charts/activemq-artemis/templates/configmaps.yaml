@@ -8,48 +8,20 @@ data:
     <configuration xmlns="urn:activemq" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:activemq /schema/artemis-configuration.xsd">
       <core xmlns="urn:activemq:core" xsi:schemaLocation="urn:activemq:core ">
         
-        <persistence-enabled>true</persistence-enabled>
-        <journal-type>ASYNCIO</journal-type>
-        <paging-directory>data/paging</paging-directory>
-        <bindings-directory>data/bindings</bindings-directory>
-        <journal-directory>data/journal</journal-directory>
-        <large-messages-directory>data/large-messages</large-messages-directory>
-        <critical-analyzer-timeout>600000</critical-analyzer-timeout>
-        
-        <security-enabled>false</security-enabled>
-        
-        <jmx-management-enabled>true</jmx-management-enabled>
+        {{- range $parameter, $value := $.Values.brokerConfiguration.parameters }}
+          <{{ $parameter }}>{{ $value }}</{{ $parameter }}>
+        {{- end }}
         
         <address-settings>
-          <!-- if you define auto-create on certain queues, management has to be auto-create -->
-          <address-setting match="activemq.management#">
-            <dead-letter-address>DLQ</dead-letter-address>
-            <expiry-address>ExpiryQueue</expiry-address>
-            <redelivery-delay>0</redelivery-delay>
-            <!-- with -1 only the global-max-size is in use for limiting -->
-            <max-size-bytes>-1</max-size-bytes>
-            <message-counter-history-day-limit>10</message-counter-history-day-limit>
-            <address-full-policy>PAGE</address-full-policy>
-            <auto-create-queues>true</auto-create-queues>
-            <auto-create-addresses>true</auto-create-addresses>
-            <auto-delete-queues>true</auto-delete-queues>
-            <auto-delete-addresses>true</auto-delete-addresses>
+          {{- range $address, $properties := $.Values.brokerConfiguration.addresses }}
+          <address-setting match={{ $address | quote }}>
+            {{- range $property, $value := $properties }}
+            <{{ $property }}>{{ $value }}</{{ $property }}>
+            {{- end }}
           </address-setting>
-          <!--default for catch all-->
-          <address-setting match="#">
-            <dead-letter-address>DLQ</dead-letter-address>
-            <expiry-address>ExpiryQueue</expiry-address>
-            <redelivery-delay>0</redelivery-delay>
-            <!-- with -1 only the global-max-size is in use for limiting -->
-            <max-size-bytes>-1</max-size-bytes>
-            <message-counter-history-day-limit>10</message-counter-history-day-limit>
-            <address-full-policy>PAGE</address-full-policy>
-            <auto-create-queues>true</auto-create-queues>
-            <auto-create-addresses>true</auto-create-addresses>
-            <auto-delete-queues>true</auto-delete-queues>
-            <auto-delete-addresses>true</auto-delete-addresses>
-          </address-setting>
+          {{- end }}
         </address-settings>
+        
         <addresses>
           <address name="DLQ">
             <anycast>

@@ -1,9 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $releaseName := .Release.Name -}}
-{{- $servicePort := 80 -}}
-{{- if .Values.service }}
-  {{- $servicePort = .Values.service.port | default $servicePort -}}
-{{- else if .Values.httpdSidecar.enabled }}
+{{- $servicePort := .Values.service.port -}}
+{{- if .Values.httpdSidecar.enabled }}
   {{- $servicePort = 443 -}}
 {{- end }}
 {{- $ingressPaths := .Values.ingress.paths -}}

@@ -72,10 +72,9 @@ resources:
     # secretKey: your-secret-key
 
 httpdSidecar:
-  enabled: true
-  imageTag: latest
-
+  enabled: false
   image: httpd:2.4.52-alpine
+  imageTag: latest
 
   port: 8002
 

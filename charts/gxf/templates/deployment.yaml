@@ -8,7 +8,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end}}
 spec:
-  replicas: {{ .Values.replicas | default 1 }}
+  replicas: {{ .Values.replicas}}
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -30,7 +30,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ .Values.serviceAccountName | default "default" }}
+      serviceAccountName: {{ .Values.serviceAccountName }}
       {{- if .Values.imagePullSecret }}
       imagePullSecrets:
         - {{ .Values.imagePullSecret }}
@@ -40,7 +40,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Release.Name }}
-        image: {{ .Values.imageRepo }}{{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}
+        image: {{ .Values.imageRepo }}{{ .Values.image }}:{{ .Values.imageTag }}
         resources: {{- toYaml .Values.resources | nindent 10 }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         env:
@@ -125,7 +125,7 @@ spec:
         {{- end }}
       {{- if .Values.httpdSidecar.enabled }}
       - name: httpd
-        image: {{ .Values.httpdSidecar.imageRepo }}{{ .Values.httpdSidecar.image }}{{- if .Values.httpdSidecar.imageTag -}}:{{- end -}}{{ .Values.httpdSidecar.imageTag }}
+        image: {{ .Values.httpdSidecar.imageRepo }}{{ .Values.httpdSidecar.image }}:{{ .Values.httpdSidecar.imageTag }}
         {{- if .Values.httpdSidecar.resources }}
         resources: {{- toYaml .Values.httpdSidecar.resources | nindent 10 }}
         {{- end }}

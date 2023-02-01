@@ -1,3 +1,8 @@
+imageTag: latest
+replicas: 1
+serviceAccountName: default
+enableDefaultProbes: false
+
 activemq-artemis:
   enabled: false
   persistence:
@@ -46,6 +51,7 @@ resources:
 
 httpdSidecar:
   enabled: false
+  imageTag: latest
 
   image: httpd:2.4.52-alpine
 

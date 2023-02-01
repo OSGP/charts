@@ -44,8 +44,6 @@ data:
     User daemon
     Group daemon
 
-    ServerAdmin you@example.com
-
     ErrorLog /proc/self/fd/2
     LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
     LogFormat "%h %l %u %t \"%r\" %>s %b" common

@@ -71,8 +71,8 @@ brokerConfiguration:
       message-counter-history-day-limit: 10
       address-full-policy: PAGE
       max-delivery-attempts: -1
-      max-redelivery-delay: 3600000 # 1 hour
-      redelivery-delay: 60000 # 1 minute
+      max-redelivery-delay: 3600000  #1 hour
+      redelivery-delay: 60000  #1 minute
       redelivery-delay-multiplier: 2
       auto-create-queues: true
       auto-create-addresses: true

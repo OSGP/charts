@@ -121,9 +121,9 @@ data:
     SSLCryptoDevice builtin
 
   vhosts.conf: |
-    Listen 443
+    Listen {{.Values.service.targetPort}}
 
-    <VirtualHost *:443>
+    <VirtualHost *:{{.Values.service.targetPort}}>
         ServerName {{ $serverName }}
         ErrorLog /tmp/osp_error.log
         LogLevel warn

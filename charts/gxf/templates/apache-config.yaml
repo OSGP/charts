@@ -1,6 +1,11 @@
 {{ if .Values.httpdSidecar.enabled }}
 {{- $paths := .Values.httpdSidecar.paths -}}
 
+{{- $serverName := (print .Release.Name "." .Release.Namespace) }}
+{{- if .Values.httpdSidecar.serverName }}
+  {{- $serverName = tpl .Values.httpdSidecar.serverName . }}
+{{ end }}
+
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -10,14 +15,10 @@ metadata:
     app: {{ .Release.Name }}
 data:
   httpd.conf: |
-    
+
     ServerRoot "/usr/local/apache2"
-    {{- if .Values.httpdSidecar.serverName }}
-    ServerName {{ tpl .Values.httpdSidecar.serverName . -}}
-    {{- else }}
-    ServerName {{ .Release.Name }}.{{ .Release.Namespace -}}
-    {{ end }}
-    
+    ServerName {{ $serverName }}
+
     Listen 80
     PidFile /tmp/httpd.pid
 
@@ -49,108 +50,96 @@ data:
     LoadModule dir_module modules/mod_dir.so
     LoadModule alias_module modules/mod_alias.so
     LoadModule rewrite_module modules/mod_rewrite.so
-    
+
     <IfModule unixd_module>
         User daemon
         Group daemon
     </IfModule>
-    
+
     ServerAdmin you@example.com
-    
+
     DocumentRoot "/usr/local/apache2/htdocs"
     <Directory "/usr/local/apache2/htdocs">
         Options Indexes FollowSymLinks
         AllowOverride None
         Require all granted
     </Directory>
-    
+
     <IfModule dir_module>
         DirectoryIndex index.html
     </IfModule>
-    
+
     <Files ".ht*">
         Require all denied
     </Files>
-    
+
     ErrorLog /proc/self/fd/2
-    
+
     LogLevel warn
-    
+
     <IfModule log_config_module>
         LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
         LogFormat "%h %l %u %t \"%r\" %>s %b" common
-    
+
         <IfModule logio_module>
           LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
         </IfModule>
-    
+
         CustomLog /proc/self/fd/1 common
-    
+
     </IfModule>
-    
+
     <IfModule alias_module>
-    
+
         ScriptAlias /cgi-bin/ "/usr/local/apache2/cgi-bin/"
-    
+
     </IfModule>
-    
+
     <Directory "/usr/local/apache2/cgi-bin">
         AllowOverride None
         Options None
         Require all granted
     </Directory>
-    
+
     <IfModule headers_module>
         RequestHeader unset Proxy early
     </IfModule>
-    
+
     <IfModule mime_module>
         TypesConfig conf/mime.types
-    
+
         AddType application/x-compress .Z
         AddType application/x-gzip .gz .tgz
     </IfModule>
 
     Include conf/extra/httpd-vhosts.conf
-    
+
     Include conf/extra/httpd-ssl.conf
 
   vhosts.conf: |
-    
+
     <VirtualHost *:80>
-        {{- if .Values.httpdSidecar.serverName }}
-        ServerName {{ tpl .Values.httpdSidecar.serverName . -}}
-        {{- else }}
-        ServerName {{ .Release.Name }}.{{ .Release.Namespace -}}
-        {{ end }}
-    
+        ServerName {{ $serverName }}
+
         <Location /server-status>
             SetHandler server-status
         </Location>
-        
+
         {{ range .Values.httpdSidecar.paths }}
         {{- if (not .subpath | default false) }}
-        {{ if $.Values.httpdSidecar.serverName }}
-        Redirect permanent /{{ .name }} https://{{ tpl $.Values.httpdSidecar.serverName $ }}/{{ .name }}
-        {{- else -}}
-        Redirect permanent /{{ .name }} https://{{ $.Release.Name }}.{{ $.Release.Namespace }}/{{ .name }}
-        {{- end -}}
+        Redirect permanent /{{ .name }} https://{{ $serverName }}/{{ .name }}
         {{- end -}}
         {{- end }}
-        
+
     </VirtualHost>
-    
+
     Listen 443
-    
+
     <VirtualHost *:443>
-        {{- if .Values.httpdSidecar.serverName }}
-        ServerName {{ tpl .Values.httpdSidecar.serverName . -}}
-        {{- else }}
-        ServerName {{ .Release.Name }}.{{ .Release.Namespace -}}
-        {{ end }}
+        ServerName {{ $serverName }}
         ErrorLog /tmp/osp_error.log
         LogLevel warn
-    
+
         <IfModule log_config_module>
             LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
             LogFormat "%h %l %u %t \"%r\" %>s %b" common
@@ -158,30 +147,30 @@ data:
               LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
             </IfModule>
         </IfModule>
-    
+
         CustomLog /tmp/osp_ssl_access.log combined
-        
+
         SSLCertificateFile /certs/server.crt
         SSLCertificateKeyFile /certs/server.key
         SSLCACertificateFile /certs/root.crt
-        
+
         SSLEngine on
         SSLProtocol -all +TLSv1.2 -TLSv1.3
-    
+
         BrowserMatch "MSIE [2-6]" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
         BrowserMatch "MSIE [7-9]" ssl-unclean-shutdown
-    
+
         RewriteEngine on
-    
+
         RewriteCond %{QUERY_STRING} transport=websocket    [NC]
-        
+
         <Directory />
             Options -Indexes
             AllowOverride all
             Order allow,deny
             allow from all
         </Directory>
-    
+
         <IfModule mod_proxy_ajp.c>
             {{range .Values.httpdSidecar.paths }}
             {{ if (not .subpath | default false) -}}
@@ -190,7 +179,7 @@ data:
             {{ end -}}
             {{ end }}
         </IfModule>
-        
+
         {{range .Values.httpdSidecar.paths }}
         {{ if .properties }}
         <Location /{{ .name }}>
@@ -198,20 +187,20 @@ data:
         </Location>
         {{- end }}
         {{- end }}
-    
+
     </VirtualHost>
-    
+
   ssl.conf: |
     SSLPassPhraseDialog |/certs/server-key-password
-    
+
     SSLSessionCache         shmcb:/var/cache/mod_ssl/scache(512000)
     SSLSessionCacheTimeout  300
-    
+
     Mutex default
-    
+
     SSLRandomSeed startup file:/dev/urandom  256
     SSLRandomSeed connect builtin
-    
+
     SSLCryptoDevice builtin
 
 {{ end }}

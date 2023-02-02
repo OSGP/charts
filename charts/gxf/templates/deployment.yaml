@@ -155,13 +155,13 @@ spec:
           defaultMode: 0555
       {{- end }}
       {{- if .Values.extraVolumes }}
-      {{- if eq (typeOf .Values.extraVolumes) "[]interface {}"}}
+      {{- if eq (typeOf .Values.extraVolumes) "[]interface {}" }}
       {{- toYaml .Values.extraVolumes | nindent 6 }}
       {{- else if eq (typeOf .Values.extraVolumes) "string" }}
       {{- with .Values.extraVolumes }}
       {{- tpl . $ | nindent 6 }}
       {{- end }}
-      {{- end}}
+      {{- end }}
       {{- end }}
       terminationGracePeriodSeconds: 60
       enableServiceLinks: false

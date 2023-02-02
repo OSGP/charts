@@ -1,3 +1,24 @@
+imageTag: latest
+replicas: 1
+serviceAccountName: default
+enableDefaultProbes: false
+service:
+  port: 80
+
+startupProbe:
+  failureThreshold: 30
+  periodSeconds: 5
+  httpGet:
+    port: 8080
+    path: /probe/probe.txt
+livenessProbe:
+  failureThreshold: 6
+  periodSeconds: 5
+  httpGet:
+    port: 9404
+    path: /metrics
+readinessProbe: {}
+
 activemq-artemis:
   enabled: false
   persistence:
@@ -46,29 +67,17 @@ resources:
 
 httpdSidecar:
   enabled: false
-
   image: httpd:2.4.52-alpine
+  imageTag: latest
 
-  readinessProbe:
-    httpGet:
-      path: /
-      port: 443
-      scheme: HTTPS
-    initialDelaySeconds: 30
-    periodSeconds: 5
-  livenessProbe:
-    httpGet:
-      path: /
-      port: 443
-      scheme: HTTPS
-    initialDelaySeconds: 30
-    periodSeconds: 5
+  port: 8002
 
 pvcStorage:
   enabled: false
 
 ingress:
   enabled: false
+  gate: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"

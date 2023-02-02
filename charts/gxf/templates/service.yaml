@@ -1,32 +1,22 @@
-{{- $releaseName := .Release.Name -}}
-{{- $servicePort := 80 -}}
-{{- $targetPort := 8080 -}}
-{{- if .Values.service -}}
-  {{- $servicePort = .Values.service.port | default $servicePort -}}
-  {{- $targetPort = .Values.service.targetPort | default $targetPort -}}
-{{- else if .Values.httpdSidecar.enabled -}}
-  {{- $servicePort = 443 -}}
-  {{- $targetPort = 443 -}}
-{{- end -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $releaseName }}
-  labels:
-    app: {{ $releaseName }}
+  name: {{ .Release.Name }}
 spec:
   ports:
-  - name: {{ $releaseName }}
-    port: {{ $servicePort }}
-    targetPort: {{ $targetPort | default $servicePort }}
-    protocol: TCP
-  {{- range .Values.extraServicePorts }}
-  - name: {{ $releaseName }}-{{ .name }}
-    port: {{ .port }}
-    targetPort: {{ .targetPort | default .port }}
-    protocol: {{ .protocol | default "TCP" }}
-  {{- end }}
-
-
+    - name: {{ .Release.Name }}
+      port: {{ .Values.service.port }}
+      {{- if .Values.httpdSidecar.enabled }}
+      targetPort: https
+      {{- else }}
+      targetPort: http
+      {{- end }}
+      protocol: TCP
+    {{- range .Values.extraServicePorts }}
+    - name: {{ $.Release.Name }}-{{ .name }}
+      port: {{ .port }}
+      targetPort: {{ .targetPort | default .port }}
+      protocol: {{ .protocol | default "TCP" }}
+    {{- end }}
   selector:
-    app: {{ $releaseName }}
+    app: {{ .Release.Name }}

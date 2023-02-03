@@ -93,9 +93,15 @@ spec:
         {{- if .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumeMounts | nindent 8 }}
         {{- end }}
+        {{- if .Values.startupProbe }}
         startupProbe: {{- toYaml .Values.startupProbe | nindent 10 }}
+        {{- end }}
+        {{- if .Values.livenessProbe }}
         livenessProbe: {{- toYaml .Values.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if .Values.readinessProbe }}
         readinessProbe: {{- toYaml .Values.readinessProbe | nindent 10 }}
+        {{- end }}
       {{- if .Values.httpdSidecar.enabled }}
       - name: httpd
         image: {{ .Values.httpdSidecar.imageRepo }}{{ .Values.httpdSidecar.image }}:{{ .Values.httpdSidecar.imageTag }}

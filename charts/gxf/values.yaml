@@ -67,8 +67,8 @@ resources:
 
 httpdSidecar:
   enabled: false
-  image: httpd:2.4.52-alpine
-  imageTag: latest
+  image: httpd
+  imageTag: 2.4.52-alpine
 
   port: 8002
 

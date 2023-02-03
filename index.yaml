@@ -351,6 +351,28 @@ entries:
     version: 0.0.5
   gxf:
   - apiVersion: v2
+    created: "2023-02-03T16:42:04.268403841Z"
+    dependencies:
+    - condition: activemq-artemis.enabled
+      name: activemq-artemis
+      repository: https://osgp.github.io/charts/
+      version: 0.0.*
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.1.9
+    description: Generic GXF Helm chart
+    digest: 67aa6d74ee226f3ddf853db7f3c2f4188022f6dc3b1f3db77af1990e2bcdab88
+    icon: https://artwork.lfenergy.org/projects/grid-exchange-fabric/abbrev/color/grid-exchange-fabric-abbrev-color.png
+    maintainers:
+    - email: gxf@lists.lfenergy.org
+      name: OSGP
+      url: https://www.lfenergy.org/projects/gxf/
+    name: gxf
+    urls:
+    - https://github.com/OSGP/charts/releases/download/gxf-1.3.3/gxf-1.3.3.tgz
+    version: 1.3.3
+  - apiVersion: v2
     created: "2023-02-03T16:28:33.1844303Z"
     dependencies:
     - condition: activemq-artemis.enabled
@@ -1472,4 +1494,4 @@ entries:
     urls:
     - https://github.com/OSGP/charts/releases/download/gxf-1.2.1/gxf-1.2.1.tgz
     version: 1.2.1
-generated: "2023-02-03T16:28:33.184829102Z"
+generated: "2023-02-03T16:42:04.268810438Z"

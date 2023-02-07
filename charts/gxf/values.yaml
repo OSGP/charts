@@ -5,18 +5,8 @@ enableDefaultProbes: false
 service:
   port: 80
 
-startupProbe:
-  failureThreshold: 30
-  periodSeconds: 5
-  httpGet:
-    port: 8080
-    path: /probe/probe.txt
-livenessProbe:
-  failureThreshold: 6
-  periodSeconds: 5
-  httpGet:
-    port: 9404
-    path: /metrics
+startupProbe: {}
+livenessProbe: {}
 readinessProbe: {}
 
 activemq-artemis:

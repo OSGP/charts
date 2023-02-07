@@ -93,6 +93,20 @@ spec:
         {{- if .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumeMounts | nindent 8 }}
         {{- end }}
+        {{- if .Values.enableDefaultProbes }}
+        startupProbe:
+          failureThreshold: 30
+          periodSeconds: 5
+          httpGet:
+            port: 8080
+            path: /probe/probe.txt
+        livenessProbe:
+          failureThreshold: 6
+          periodSeconds: 5
+          httpGet:
+            port: 9404
+            path: /metrics
+        {{- else }}
         {{- if .Values.startupProbe }}
         startupProbe: {{- toYaml .Values.startupProbe | nindent 10 }}
         {{- end }}
@@ -101,6 +115,7 @@ spec:
         {{- end }}
         {{- if .Values.readinessProbe }}
         readinessProbe: {{- toYaml .Values.readinessProbe | nindent 10 }}
+        {{- end }}
         {{- end }}
       {{- if .Values.httpdSidecar.enabled }}
       - name: httpd

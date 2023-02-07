@@ -1,6 +1,8 @@
 imageTag: latest
 replicas: 1
-serviceAccountName: default
+serviceAccount:
+  create: false
+  name: default
 enableDefaultProbes: false
 service:
   port: 80

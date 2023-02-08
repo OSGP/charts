@@ -4,14 +4,14 @@ metadata:
   name: {{ .Release.Name }}
 spec:
   ports:
-    - name: {{ .Release.Name }}
-      port: {{ .Values.service.port }}
-      {{- if .Values.httpdSidecar.enabled }}
-      targetPort: https
-      {{- else }}
+    - name: http
+      port: 80
       targetPort: http
-      {{- end }}
-      protocol: TCP
+    {{- if .Values.httpdSidecar.enabled }}
+    - name: https
+      port: 443
+      targetPort: https
+    {{- end }}
     {{- range .Values.extraServicePorts }}
     - name: {{ $.Release.Name }}-{{ .name }}
       port: {{ .port }}

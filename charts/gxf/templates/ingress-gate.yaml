@@ -25,7 +25,7 @@ spec:
     - path: {{ .path }}
       backend:
         serviceName: {{ $.Release.Name }}
-        servicePort: {{ $.Values.service.port }}
+        servicePort: 80
     {{- end }}
   {{- end }}
 {{- end }}

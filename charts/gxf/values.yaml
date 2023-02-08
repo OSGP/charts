@@ -4,8 +4,6 @@ serviceAccount:
   create: false
   name: default
 enableDefaultProbes: false
-service:
-  port: 80
 
 startupProbe: {}
 livenessProbe: {}
@@ -62,7 +60,7 @@ httpdSidecar:
   image: httpd
   imageTag: 2.4.52-alpine
 
-  port: 8002
+  port: 9443
 
 pvcStorage:
   enabled: false

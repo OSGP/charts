@@ -25,7 +25,11 @@ spec:
     - path: {{ .path }}
       backend:
         serviceName: {{ $.Release.Name }}
-        servicePort: {{ $.Values.service.port }}
+        {{- if $.Values.httpdSidecar.enabled }}
+        servicePort: 443
+        {{- else }}
+        servicePort: 80
+        {{- end }}
     {{- end }}
   {{- end }}
 {{- end }}

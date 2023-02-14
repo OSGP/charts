@@ -21,7 +21,7 @@ spec:
     spec:
       {{- if .Values.imagePullSecret }}
       imagePullSecrets:
-        - {{ .Values.imagePullSecret }}
+        - name: {{ .Values.imagePullSecret }}
       {{- end }}
       securityContext:
         runAsUser: 1000

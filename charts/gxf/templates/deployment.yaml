@@ -33,7 +33,7 @@ spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- if .Values.imagePullSecret }}
       imagePullSecrets:
-        - {{ .Values.imagePullSecret }}
+        - name: {{ .Values.imagePullSecret }}
       {{- end }}
       {{- if .Values.initContainers }}
       initContainers: {{- toYaml .Values.initContainers | nindent 8 }}

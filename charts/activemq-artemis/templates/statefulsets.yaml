@@ -4,6 +4,9 @@ metadata:
   name: {{ template "fullname" . }}
   labels:
     app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
 spec:
   serviceName: {{ template "fullname" . }}
   replicas: {{ .Values.replicas }}
@@ -11,10 +14,14 @@ spec:
   selector:
     matchLabels:
       app: {{ template "fullname" . }}
+      release: "{{ .Release.Name }}"
+      heritage: "{{ .Release.Service }}"
   template:
     metadata:
       labels:
         app: {{ template "fullname" . }}
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
       annotations:
         prometheus.io/port: '9404'
         prometheus.io/scrape: 'true'

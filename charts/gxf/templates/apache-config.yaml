@@ -62,8 +62,11 @@ data:
 
     SSLRandomSeed startup file:/dev/urandom  256
     SSLRandomSeed connect builtin
-
     SSLCryptoDevice builtin
+
+    {{- range $key, $value := .Values.httpdSidecar.additionalServerConfig }}
+    {{ $key }} {{ $value }}
+    {{- end }}
 
     Include conf/extra/vhosts.conf
 
@@ -91,18 +94,18 @@ data:
 
         RewriteCond %{QUERY_STRING} transport=websocket    [NC]
 
-        {{range .Values.httpdSidecar.paths }}
-        {{ if (not .subpath | default false) -}}
+        {{- range .Values.httpdSidecar.paths }}
+        {{- if (not .subpath | default false) }}
         ProxyPass /{{ .name }} ajp://localhost:8009/{{ .name }}
         ProxyPassReverse /{{ .name }} /{{ .name }}
-        {{ end -}}
-        {{ end }}
+        {{- end }}
+        {{- end }}
 
         <Location /server-status>
             SetHandler server-status
         </Location>
 
-        {{range .Values.httpdSidecar.paths }}
+        {{- range .Values.httpdSidecar.paths }}
         {{ if .properties }}
         <Location /{{ .name }}>
         {{- .properties | nindent 10 }}

@@ -28,7 +28,11 @@ spec:
               service:
                 name: {{ $.Release.Name }}
                 port:
+                {{- if .Values.httpdSidecar.enabled }}
+                  name: https
+                {{- else }}
                   name: http
+                {{- end }}
           {{- end }}
   {{- end }}
 {{- end }}

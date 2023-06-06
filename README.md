@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Contributors to the Charts project
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # GXF's Helm Chart library
 These Helm charts are design to facilitate the deployment of GXF (and depending applications) to Kubernetes.
 

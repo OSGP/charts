@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: Contributors to the Charts project
+# SPDX-FileCopyrightText: GXF to the Charts project
 #
 # SPDX-License-Identifier: Apache-2.0
 

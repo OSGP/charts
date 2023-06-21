@@ -49,10 +49,21 @@ spec:
         - name: ARTEMIS_PASSWORD
           valueFrom:
             secretKeyRef:
+            {{- if .Values.artemis.useDefaultUser}}
               name: {{ template "fullname" . }}
+              {{- else}}
+              name: {{.Values.artemis.secretref}}
+              {{- end}}
               key: artemis-password
         - name: ARTEMIS_USERNAME
-          value: {{ default "artemis" .Values.artemisUser | quote }}
+          valueFrom:
+            secretKeyRef:
+            {{- if .Values.artemis.useDefaultUser}}
+              name: {{ template "fullname" . }}
+              {{- else}}
+              name: {{.Values.artemis.secretref}}
+              {{- end}}
+              key: artemis-username
         {{- if .Values.ssl.enabled }}
         - name: KEYSTORE_PASSWORD
           valueFrom:

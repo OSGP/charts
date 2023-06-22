@@ -10,13 +10,13 @@ image: apache/activemq-artemis
 imageTag: latest
 
 ## Create a database user
+## When the default user is set to true, the user in the secrets.yaml will be used
+## Otherwise set the customSecretRef field with a reference to you're own secret
 ##
-artemis:
-  useDefaultUser: true
+authentication:
   defaultUser:
-    artemisUser: artemis
-    artemisPassword: simetraehcapa
-  secretref: secretref
+    enabled: true
+  customSecretRef: secretref
 
 ## Specify an imagePullPolicy (Required)
 ## It's recommended to change this to 'Always' if the image tag is 'latest'

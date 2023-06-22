@@ -49,19 +49,19 @@ spec:
         - name: ARTEMIS_PASSWORD
           valueFrom:
             secretKeyRef:
-            {{- if .Values.artemis.useDefaultUser}}
+              {{- if .Values.authentication.defaultUser.enabled}}
               name: {{ template "fullname" . }}
               {{- else}}
-              name: {{.Values.artemis.secretref}}
+              name: {{.Values.authentication.customSecretRef}}
               {{- end}}
               key: artemis-password
         - name: ARTEMIS_USERNAME
           valueFrom:
             secretKeyRef:
-            {{- if .Values.artemis.useDefaultUser}}
+              {{- if .Values.authentication.defaultUser.enabled}}
               name: {{ template "fullname" . }}
               {{- else}}
-              name: {{.Values.artemis.secretref}}
+              name: {{.Values.authentication.customSecretRef}}
               {{- end}}
               key: artemis-username
         {{- if .Values.ssl.enabled }}

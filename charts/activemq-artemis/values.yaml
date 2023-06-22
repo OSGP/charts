@@ -16,7 +16,7 @@ imageTag: latest
 authentication:
   defaultUser:
     enabled: true
-  customSecretRef: secretref
+#  customSecretRef: secretref
 
 ## Specify an imagePullPolicy (Required)
 ## It's recommended to change this to 'Always' if the image tag is 'latest'

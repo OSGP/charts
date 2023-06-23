@@ -17,5 +17,5 @@ tar -xf /tmp/kubeconform.tar.gz kubeconform
 # validate charts
 for CHART_DIR in ${CHART_DIRS}; do
   helm dependency build "${CHART_DIR}"
-  helm template "${CHART_DIR}" | ./kubeconform -strict -ignore-missing-schemas -kubernetes-version "${KUBERNETES_VERSION#v}" -schema-location "${SCHEMA_LOCATION}" -verbose -summary -ignore-filename-pattern *.license
+  helm template "${CHART_DIR}" | ./kubeconform -strict -ignore-missing-schemas -kubernetes-version "${KUBERNETES_VERSION#v}" -schema-location "${SCHEMA_LOCATION}" -verbose -summary -ignore-filename-pattern "*.license"
 done

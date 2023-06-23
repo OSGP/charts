@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: Copyright Contributors to the GXF project
-#
-# SPDX-License-Identifier: Apache-2.0
-
 apiVersion: v2
 name: activemq-artemis
 version: 0.0.23

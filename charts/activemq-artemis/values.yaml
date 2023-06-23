@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: Copyright Contributors to the GXF project
-#
-# SPDX-License-Identifier: Apache-2.0
-
 ## activemq-artemis image version
 ## ref: https://hub.docker.com/r/vromero/activemq-artemis/tags
 ##

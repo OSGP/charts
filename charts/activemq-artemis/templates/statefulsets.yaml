@@ -42,6 +42,10 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         env:
+        - name: JAVA_ARGS
+          value: >-
+              -Dhawtio.realm=activemq -Dhawtio.offline=true
+              -Dhawtio.rolePrincipalClasses=org.apache.activemq.artemis.spi.core.security.jaas.RolePrincipal
         - name: ARTEMIS_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -51,7 +55,7 @@ spec:
               name: {{.Values.authentication.customSecretRef}}
               {{- end}}
               key: artemis-password
-        - name: ARTEMIS_USERNAME
+        - name: ARTEMIS_USER
           valueFrom:
             secretKeyRef:
               {{- if .Values.authentication.defaultUser.enabled}}

@@ -8,7 +8,7 @@ metadata:
     prometheus.io/scrape: 'true'
 spec:
   selector:
-    app: {{ .Release.Name }}
+    app: {{ $.Release.Name }}
   ports:
     - protocol: TCP
       port: {{ $port }}

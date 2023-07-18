@@ -104,12 +104,19 @@ spec:
           httpGet:
             port: 8080
             path: /probe/probe.txt
+        readinessProbe:
+          failureThreshold: 6
+          periodSeconds: 5
+          timeoutSeconds: 5
+          httpGet:
+            port: 9404
+            path: /metrics
         livenessProbe:
           failureThreshold: 6
           periodSeconds: 5
           httpGet:
-            port: 9404
-            path: /metrics
+            port: 8080
+            path: /probe/probe.txt
         {{- else }}
         {{- if .Values.startupProbe }}
         startupProbe: {{- toYaml .Values.startupProbe | nindent 10 }}

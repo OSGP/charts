@@ -40,7 +40,7 @@ spec:
           image: "{{.Values.imageRepo}}{{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
           resources:
-{{ toYaml .Values.resources | indent 10 }}
+{{ toYaml .Values.resources | indent 12 }}
           env:
             - name: JAVA_ARGS
               value: >-
@@ -120,7 +120,7 @@ spec:
               subPath: client.ts
           {{- end }}
 {{- if .Values.extraVolumeMounts }}
-{{ toYaml .Values.extraVolumeMounts | indent 8 }}
+{{ toYaml .Values.extraVolumeMounts | indent 12 }}
 {{- end }}
       volumes:
         - name: data
@@ -139,5 +139,5 @@ spec:
             secretName: {{ template "fullname" . }}-jms-server-certs
       {{- end }}
 {{- if .Values.extraVolumes }}
-{{ toYaml .Values.extraVolumes | indent 6 }}
+{{ toYaml .Values.extraVolumes | indent 8 }}
 {{- end }}

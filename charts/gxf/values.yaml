@@ -62,6 +62,10 @@ httpdSidecar:
 
   port: 9443
 
+# sidecarContainers: |-
+  # - name: sidecar
+    # image: alpine:latest
+
 pvcStorage:
   enabled: false
 

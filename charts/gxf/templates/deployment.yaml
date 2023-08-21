@@ -94,6 +94,8 @@ spec:
         - name: tomcat-config
           mountPath: /usr/local/tomcat/conf/context.xml
           subPath: context.xml
+        - name: prometheus-probe-script
+          mountPath: /usr/local/bin
         {{- if .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumeMounts | nindent 8 }}
         {{- end }}
@@ -183,6 +185,9 @@ spec:
       - name: tomcat-config
         configMap:
           name: {{ .Release.Name }}-tomcat
+      - name: prometheus-probe-script
+        configMap:
+          name: {{ .Release.Name }}-prometheus-probe-script
       {{- if .Values.httpdSidecar.enabled }}
       - name: apache-config
         configMap:

@@ -75,10 +75,10 @@ data:
 
     <VirtualHost *:{{ .Values.httpdSidecar.port }}>
         ServerName {{ $serverName }}
-        ErrorLog /tmp/osp_error.log
+        ErrorLog /dev/stderr
         LogLevel warn
 
-        CustomLog /tmp/osp_ssl_access.log combined
+        CustomLog /dev/stdout combined
 
         SSLCertificateFile /certs/server.crt
         SSLCertificateKeyFile /certs/server.key

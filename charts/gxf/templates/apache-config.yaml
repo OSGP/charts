@@ -96,7 +96,7 @@ data:
 
         {{- range .Values.httpdSidecar.paths }}
         {{- if (not .subpath | default false) }}
-        ProxyPass /{{ .name }} ajp://localhost:8009/{{ .name }}{{ if int .proxyTimeout }} timeout={{ int .Values.proxyTimeout }}{{ end }}
+        ProxyPass /{{ .name }} ajp://localhost:8009/{{ .name }}{{ if int .proxyTimeout }} timeout={{ int .proxyTimeout }}{{ end }}
         ProxyPassReverse /{{ .name }} /{{ .name }}
         {{- end }}
         {{- end }}

@@ -1,7 +1,7 @@
 apiVersion: v2
 name: gxf
 description: Generic GXF Helm chart
-version: '1.5.26'
+version: '1.5.27'
 icon: https://artwork.lfenergy.org/projects/grid-exchange-fabric/abbrev/color/grid-exchange-fabric-abbrev-color.png
 maintainers:
   - name: OSGP

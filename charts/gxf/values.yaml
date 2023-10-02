@@ -58,7 +58,7 @@ resources:
 httpdSidecar:
   enabled: false
   image: httpd
-  imageTag: 2.4.52-alpine
+  imageTag: 2.4.57-alpine
 
   port: 9443
 

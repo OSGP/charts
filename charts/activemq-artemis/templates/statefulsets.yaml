@@ -44,7 +44,8 @@ spec:
           env:
             - name: JAVA_ARGS
               value: >-
-                -Dhawtio.realm=activemq -Dhawtio.offline=true
+                -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0	
+                -Dhawtio.realm=activemq -Dhawtio.offline=true	
                 -Dhawtio.rolePrincipalClasses=org.apache.activemq.artemis.spi.core.security.jaas.RolePrincipal
             - name: ARTEMIS_PASSWORD
               valueFrom:

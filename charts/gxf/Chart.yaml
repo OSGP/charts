@@ -9,7 +9,7 @@ maintainers:
     url: https://www.lfenergy.org/projects/gxf/
 dependencies:
 - name: activemq-artemis
-  version: "0.0.27"
+  version: "0.0.28"
   repository: "https://osgp.github.io/charts/"
   condition: activemq-artemis.enabled
 - name: postgresql

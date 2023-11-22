@@ -85,14 +85,14 @@ data:
         SSLCACertificateFile /certs/root.crt
 
         SSLEngine on
-        SSLProtocol -all +TLSv1.2 -TLSv1.3
+        SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1
 
-        BrowserMatch "MSIE [2-6]" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
-        BrowserMatch "MSIE [7-9]" ssl-unclean-shutdown
+        Header always append X-Frame-Options SAMEORIGIN
+        Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains"
 
         RewriteEngine on
 
-        RewriteCond %{QUERY_STRING} transport=websocket    [NC]
+        RewriteCond %{QUERY_STRING} transport=websocket [NC]
 
         {{- range .Values.httpdSidecar.paths }}
         {{- if (not .subpath | default false) }}

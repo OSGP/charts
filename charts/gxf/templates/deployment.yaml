@@ -64,7 +64,7 @@ spec:
         - name: {{ $key }}
           valueFrom:
             secretKeyRef:
-              name: {{ tpl $value.secretName . }}
+              name: {{ tpl $value.secretName $ }}
               key: {{ $value.secretKey }}
         {{- end }}
         ports:

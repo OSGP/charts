@@ -1,3 +1,14 @@
+imageTag: latest
+replicas: 1
+serviceAccount:
+  create: false
+  name: default
+enableDefaultProbes: false
+
+startupProbe: {}
+livenessProbe: {}
+readinessProbe: {}
+
 activemq-artemis:
   enabled: false
   persistence:
@@ -30,37 +41,37 @@ postgresql:
 
 resources:
   limits:
-    cpu: 4
+    cpu: 1
     memory: 1Gi
   requests:
-    cpu: 500m
+    cpu: 100m
     memory: 1Gi
+
+# extraEnv:
+  # YOUR_ENV: your-value
+
+# envFromSecrets:
+  # YOUR_ENV:
+    # secretName: your-secret
+    # secretKey: your-secret-key
 
 httpdSidecar:
   enabled: false
+  image: httpd
+  imageTag: 2.4.57-alpine
 
-  image: httpd:2.4.52-alpine
+  port: 9443
 
-  readinessProbe:
-    httpGet:
-      path: /
-      port: 443
-      scheme: HTTPS
-    initialDelaySeconds: 30
-    periodSeconds: 5
-  livenessProbe:
-    httpGet:
-      path: /
-      port: 443
-      scheme: HTTPS
-    initialDelaySeconds: 30
-    periodSeconds: 5
+# sidecarContainers: |-
+  # - name: sidecar
+    # image: alpine:latest
 
-efsStorage:
-  create: false
+pvcStorage:
+  enabled: false
 
 ingress:
   enabled: false
+  gate: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -78,6 +89,9 @@ ingress:
   #  - secretName: wildcard-hostname-osgp-cloud
   #    hosts:
   #      - hostname.ogsp.cloud
+
+route:
+  enabled: false
 
 logging:
   # rootLevel: WARN

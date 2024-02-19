@@ -1,57 +1,38 @@
-{{- if .Values.ingress.enabled -}}
-{{- $releaseName := .Release.Name -}}
-{{- $servicePort := 80 -}}
-{{- if .Values.service }}
-  {{- $servicePort = .Values.service.port | default $servicePort -}}
-{{- else if .Values.httpdSidecar.enabled }}
-  {{- $servicePort = 443 -}}
-{{- end }}
-{{- $ingressPaths := .Values.ingress.paths -}}
-{{- $ingressGate := .Values.ingress.gate -}}
-apiVersion: {{ if $ingressGate }}gatemin.io/v1alpha1{{ else }}networking.k8s.io/v1beta1{{ end }}
-kind: {{ if $ingressGate }}IngressGate{{ else }}Ingress{{ end }}
+{{- if (and .Values.ingress.enabled (not .Values.ingress.gate)) -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: {{ $releaseName }}
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
-  labels:
-    app: {{ $releaseName }}
-{{- with .Values.ingress.annotations }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+  annotations: {{- toYaml .Values.ingress.annotations | nindent 4 }}
 spec:
-{{- if .Values.ingress.tls }}
+  {{- if .Values.ingress.tls }}
   tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-{{- end }}
-{{- if $ingressGate }}
-  auth:
-    type: NONE
-{{- end }}
-{{- if not $ingressGate }}
+    {{- range .Values.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ tpl . $ }}
+      {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
   rules:
-{{- end }}
-{{- range .Values.ingress.hosts }}
-  {{- if $ingressGate }}
-  host: {{ (tpl . $) }}
-  services:
-  {{- else }}
+  {{- range .Values.ingress.hosts }}
     - host: {{ (tpl . $) }}
       http:
         paths:
-  {{- end }}
-  {{- range $ingressPaths }}
-    {{- if $ingressGate }}
-    - path: {{ . }}
-      backend:
-        serviceName: {{ $releaseName }}
-        servicePort: {{ $servicePort }}
-    {{- else }}
-          - path: {{ . }}
+          {{- range $.Values.ingress.paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "ImplementationSpecific" }}
             backend:
-              serviceName: {{ $releaseName }}
-              servicePort: {{ $servicePort }}
-    {{- end }}
+              service:
+                name: {{ $.Release.Name }}
+                port:
+                {{- if $.Values.httpdSidecar.enabled }}
+                  name: https
+                {{- else }}
+                  name: http
+                {{- end }}
+          {{- end }}
   {{- end }}
-{{- end }}
 {{- end }}

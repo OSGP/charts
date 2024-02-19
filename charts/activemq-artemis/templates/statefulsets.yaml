@@ -14,105 +14,133 @@ spec:
   selector:
     matchLabels:
       app: {{ template "fullname" . }}
-      chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
       release: "{{ .Release.Name }}"
       heritage: "{{ .Release.Service }}"
   template:
     metadata:
       labels:
         app: {{ template "fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
       annotations:
         prometheus.io/port: '9404'
         prometheus.io/scrape: 'true'
     spec:
+      {{- if .Values.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+      {{- end }}
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
       serviceAccountName: {{ template "service-account" . }}
       containers:
-      - name: {{ template "fullname" . }}
-        image: "{{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}"
-        imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
-        resources:
-{{ toYaml .Values.resources | indent 10 }}
-        env:
-        - name: ARTEMIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "fullname" . }}
-              key: artemis-password
-        - name: ARTEMIS_USERNAME
-          value: {{ default "artemis" .Values.artemisUser | quote }}
-        - name: KEYSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: keyStorePassword
-              name: {{ template "fullname" . }}-jms-server-certs
-        - name: TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: trustStorePassword
-              name: {{ template "fullname" . }}-jms-server-certs
-        - name: ARTEMIS_PERF_JOURNAL
-          value: {{ default "AUTO" .Values.persistence.testJournalPerformance | quote }}
-        - name: ENABLE_JMX_EXPORTER
-          value: "true"
-        ports:
-        - name: http
-          containerPort: 8161
-        - name: jms
-          containerPort: 61617
-        - name: jmxexporter
-          containerPort: 9404
-        startupProbe:
-          httpGet:
-            port: http
-          failureThreshold: 30
-          periodSeconds: 10
-        livenessProbe:
-          tcpSocket:
-            port: http
-          periodSeconds: 10
-        readinessProbe:
-          tcpSocket:
-            port: http
-          initialDelaySeconds: 60
-          periodSeconds: 10
-        volumeMounts:
-          - mountPath: /var/lib/artemis-instance/data	
-            name: data
-          - name: config
-            mountPath: /broker.xml
-            subPath: broker.xml
-          - name: certs
-            mountPath: /var/lib/artemis-instance/ssl/broker.ks
-            subPath: broker.ks
-          - name: certs
-            mountPath: /var/lib/artemis-instance/ssl/client.ts
-            subPath: client.ts
+        - name: {{ template "fullname" . }}
+          image: "{{.Values.imageRepo}}{{ .Values.image }}{{- if .Values.imageTag -}}:{{- end -}}{{ .Values.imageTag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          env:
+            - name: JAVA_ARGS
+              value: >-
+                -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0
+                -Dhawtio.realm=activemq -Dhawtio.offline=true
+                -Dhawtio.rolePrincipalClasses=org.apache.activemq.artemis.spi.core.security.jaas.RolePrincipal
+            - name: ARTEMIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                {{- if .Values.authentication.defaultUser.enabled}}
+                  name: {{ template "fullname" . }}
+                {{- else}}
+                  name: {{.Values.authentication.customSecretRef}}
+                {{- end}}
+                  key: artemis-password
+            - name: ARTEMIS_USER
+              valueFrom:
+                secretKeyRef:
+                {{- if .Values.authentication.defaultUser.enabled}}
+                  name: {{ template "fullname" . }}
+                {{- else}}
+                  name: {{.Values.authentication.customSecretRef}}
+                {{- end}}
+                  key: artemis-username
+          {{- if .Values.ssl.enabled }}
+            - name: KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: keyStorePassword
+                  name: {{ template "fullname" . }}-jms-server-certs
+            - name: TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: trustStorePassword
+                  name: {{ template "fullname" . }}-jms-server-certs
+          {{- end }}
+            - name: ARTEMIS_PERF_JOURNAL
+              value: {{ default "AUTO" .Values.persistence.testJournalPerformance | quote }}
+            - name: ENABLE_JMX_EXPORTER
+              value: "true"
+          {{- range $key, $value := .Values.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8161
+            - name: jms
+              containerPort: 61617
+            - name: jmxexporter
+              containerPort: 9404
+          startupProbe:
+            httpGet:
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /var/lib/artemis-instance/data
+              name: data
+            - name: config
+              mountPath: /broker.xml
+              subPath: broker.xml
+          {{- if .Values.ssl.enabled }}
+            - name: certs
+              mountPath: /var/lib/artemis-instance/ssl/broker.ks
+              subPath: broker.ks
+            - name: certs
+              mountPath: /var/lib/artemis-instance/ssl/client.ts
+              subPath: client.ts
+          {{- end }}
 {{- if .Values.extraVolumeMounts }}
-{{ toYaml .Values.extraVolumeMounts | indent 8 }}
+{{ toYaml .Values.extraVolumeMounts | indent 12 }}
 {{- end }}
       volumes:
-      - name: data
+        - name: data
         {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}
+          persistentVolumeClaim:
+            claimName: {{ template "fullname" . }}
         {{- else }}
-        emptyDir: {}
+          emptyDir: { }
         {{- end }}
-      - name: config
-        configMap:
-          name: {{ template "fullname" . }}
-      - name: certs
-        secret:
-          secretName: {{ template "fullname" . }}-jms-server-certs
+        - name: config
+          configMap:
+            name: {{ template "fullname" . }}
+      {{- if .Values.ssl.enabled }}
+        - name: certs
+          secret:
+            secretName: {{ template "fullname" . }}-jms-server-certs
+      {{- end }}
 {{- if .Values.extraVolumes }}
-{{ toYaml .Values.extraVolumes | indent 6 }}
+{{ toYaml .Values.extraVolumes | indent 8 }}
 {{- end }}
 {{- if .Values.nodeSelector }}
 {{ toYaml .Values.nodeSelector | indent 8 }}

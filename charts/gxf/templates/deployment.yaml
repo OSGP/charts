@@ -96,6 +96,10 @@ spec:
           subPath: context.xml
         - name: prometheus-probe-script
           mountPath: /usr/local/bin
+        {{- if .Values.tomcatHttpsEnabled }}
+        - name: server-certs
+          mountPath: /certs
+        {{- end }}
         {{- if .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumeMounts | nindent 8 }}
         {{- end }}
@@ -147,7 +151,7 @@ spec:
         - name: apache-config
           mountPath: /usr/local/apache2/conf/extra/vhosts.conf
           subPath: vhosts.conf
-        - name: apache-server-certs
+        - name: server-certs
           mountPath: /certs
         {{- if .Values.httpdSidecar.extraVolumeMounts }}
         {{- toYaml .Values.httpdSidecar.extraVolumeMounts | nindent 8 }}
@@ -192,7 +196,9 @@ spec:
       - name: apache-config
         configMap:
           name: {{ .Release.Name }}-apache
-      - name: apache-server-certs
+      {{- end }}
+      {{- if or (.Values.tomcatHttpsEnabled) (.Values.httpdSidecar.enabled) }}
+      - name: server-certs
         secret:
           secretName: {{ .Release.Name }}.apache-server-certs
           defaultMode: 0555

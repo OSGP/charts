@@ -45,6 +45,19 @@ SPDX-License-Identifier: Apache-2.0
                prestartminSpareThreads="true"
                secretRequired="false" />
     {{- end }}
+    {{- if .Values.tomcatHttpsEnabled }}
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11AprProtocol"
+                maxThreads="150" SSLEnabled="true" >
+        <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+        <SSLHostConfig>
+            <Certificate certificateKeyFile="/etc/ssl/certs/server.key"
+                          certificateFile="/etc/ssl/certs/server.crt"
+                          caCertificateFile="/etc/ssl/certs/root.crt"
+                          SSLVerifyClient="require"
+                          type="RSA" />
+        </SSLHostConfig>
+    </Connector>
+    {{- end }}
 
     <Engine name="Catalina" defaultHost="localhost">
 

@@ -56,6 +56,12 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.labels['app']
+        {{- if .Values.httpsConnector.enabled }}
+        - name: CERTIFICATE_KEY_PASSWORD
+          valueFrom:
+            secretKeyRef: {{ .Release.Name }}.apache-server-certs
+            key: server-key-password
+        {{- end }}
         {{- range $key, $value := .Values.extraEnv }}
         - name: {{ $key }}
           value: {{ tpl $value $ | quote }}
@@ -96,7 +102,7 @@ spec:
           subPath: context.xml
         - name: prometheus-probe-script
           mountPath: /usr/local/bin
-        {{- if .Values.tomcatHttpsEnabled }}
+        {{- if .Values.httpsConnector.enabled }}
         - name: server-certs
           mountPath: /certs
         {{- end }}
@@ -197,7 +203,7 @@ spec:
         configMap:
           name: {{ .Release.Name }}-apache
       {{- end }}
-      {{- if or (.Values.tomcatHttpsEnabled) (.Values.httpdSidecar.enabled) }}
+      {{- if .Values.httpsConnector.enabled }}
       - name: server-certs
         secret:
           secretName: {{ .Release.Name }}.apache-server-certs

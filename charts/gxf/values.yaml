@@ -55,6 +55,9 @@ resources:
     # secretName: your-secret
     # secretKey: your-secret-key
 
+httpsConnector:
+  enabled: true
+
 httpdSidecar:
   enabled: false
   image: httpd

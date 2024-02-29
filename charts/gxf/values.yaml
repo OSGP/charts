@@ -56,7 +56,7 @@ resources:
     # secretKey: your-secret-key
 
 httpsConnector:
-  enabled: true
+  enabled: false
 
 httpdSidecar:
   enabled: false

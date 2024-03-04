@@ -1,3 +1,4 @@
+{{- $maxThreads := .Values.maxThreads | default 800 -}}
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
@@ -28,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
     {{- if .Values.httpdSidecar.enabled }}
     <Connector port="8009"
                protocol="AJP/1.3"
-               maxThreads="800"
+               maxThreads="{{ $maxThreads }}"
                minSpareThreads="10"
                connectionTimeout="10000"
                keepAliveTimeout="10000"
@@ -38,12 +39,26 @@ SPDX-License-Identifier: Apache-2.0
     {{- if or (not .Values.httpdSidecar.enabled) (.Values.httpdSidecar.tomcatHttpEnabled) }}
     <Connector port="8080"
                protocol="HTTP/1.1"
-               maxThreads="800"
+               maxThreads="{{ $maxThreads }}"
                minSpareThreads="10"
                connectionTimeout="10000"
                keepAliveTimeout="10000"
                prestartminSpareThreads="true"
                secretRequired="false" />
+    {{- end }}
+    {{- if .Values.httpsConnector.enabled }}
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11AprProtocol"
+               maxThreads="{{ $maxThreads }}" SSLEnabled="true" >
+        <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+        <SSLHostConfig>
+            <Certificate certificateKeyFile="/etc/ssl/certs/server.key"
+                         certificateKeyPassword="${CERTIFICATE_KEY_PASSWORD}"
+                         certificateFile="/etc/ssl/certs/server.crt"
+                         caCertificateFile="/etc/ssl/certs/root.crt"
+                         SSLVerifyClient="require"
+                         type="RSA" />
+        </SSLHostConfig>
+    </Connector>
     {{- end }}
 
     <Engine name="Catalina" defaultHost="localhost">

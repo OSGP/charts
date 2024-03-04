@@ -56,6 +56,12 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.labels['app']
+        {{- if .Values.httpsConnector.enabled }}
+        - name: CERTIFICATE_KEY_PASSWORD
+          valueFrom:
+            secretKeyRef: {{ .Release.Name }}.apache-server-certs
+            key: server-key-password
+        {{- end }}
         {{- range $key, $value := .Values.extraEnv }}
         - name: {{ $key }}
           value: {{ tpl $value $ | quote }}
@@ -96,6 +102,10 @@ spec:
           subPath: context.xml
         - name: prometheus-probe-script
           mountPath: /usr/local/bin
+        {{- if .Values.httpsConnector.enabled }}
+        - name: server-certs
+          mountPath: /certs
+        {{- end }}
         {{- if .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumeMounts | nindent 8 }}
         {{- end }}
@@ -147,7 +157,7 @@ spec:
         - name: apache-config
           mountPath: /usr/local/apache2/conf/extra/vhosts.conf
           subPath: vhosts.conf
-        - name: apache-server-certs
+        - name: server-certs
           mountPath: /certs
         {{- if .Values.httpdSidecar.extraVolumeMounts }}
         {{- toYaml .Values.httpdSidecar.extraVolumeMounts | nindent 8 }}
@@ -192,7 +202,9 @@ spec:
       - name: apache-config
         configMap:
           name: {{ .Release.Name }}-apache
-      - name: apache-server-certs
+      {{- end }}
+      {{- if .Values.httpsConnector.enabled }}
+      - name: server-certs
         secret:
           secretName: {{ .Release.Name }}.apache-server-certs
           defaultMode: 0555

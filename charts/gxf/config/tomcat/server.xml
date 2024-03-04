@@ -36,7 +36,7 @@ SPDX-License-Identifier: Apache-2.0
                prestartminSpareThreads="true"
                secretRequired="false" />
     {{- end }}
-    {{- if or (not .Values.httpdSidecar.enabled) (.Values.httpdSidecar.tomcatHttpEnabled) }}
+    {{- if or .Values.httpdSidecar.tomcatHttpEnabled (and (not .Values.httpdSidecar.enabled) (not .Values.httpsConnector.enabled)) }}
     <Connector port="8080"
                protocol="HTTP/1.1"
                maxThreads="{{ $maxThreads }}"

@@ -59,8 +59,9 @@ spec:
         {{- if .Values.httpsConnector.enabled }}
         - name: CERTIFICATE_KEY_PASSWORD
           valueFrom:
-            secretKeyRef: {{ .Release.Name }}.apache-server-certs
-            key: server-key-password
+            secretKeyRef:
+              name: {{ .Release.Name }}.apache-server-certs
+              key: server-key-password
         {{- end }}
         {{- range $key, $value := .Values.extraEnv }}
         - name: {{ $key }}

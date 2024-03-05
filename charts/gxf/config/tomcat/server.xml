@@ -54,9 +54,9 @@ SPDX-License-Identifier: Apache-2.0
             <Certificate certificateKeyFile="/etc/ssl/certs/server.key"
                          certificateKeyPassword="${CERTIFICATE_KEY_PASSWORD}"
                          certificateFile="/etc/ssl/certs/server.crt"
-                         {{- if .Values.clientAuthEnabled }}
+                         {{- if .Values.httpsConnector.clientAuthEnabled }}
                          caCertificateFile="/etc/ssl/certs/root.crt"
-                         SSLVerifyClient="{{ .Values.httpsConnector.SSLVerifyClient | default 'optional' }}"
+                         SSLVerifyClient={{ .Values.httpsConnector.SSLVerifyClient | default "optional" | quote }}
                          {{- end }}
                          type="RSA" />
         </SSLHostConfig>

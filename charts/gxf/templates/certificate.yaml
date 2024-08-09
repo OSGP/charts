@@ -29,8 +29,5 @@ spec:
       passwordSecretRef:
         name: keystore-password
         key: password
-  {{- if .isCA }}
-  isCA: true
-  {{- end }}
 ---
 {{- end }}

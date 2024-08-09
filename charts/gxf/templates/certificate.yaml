@@ -21,8 +21,14 @@ spec:
     name: {{ if $.issuerRefName }}{{ $.issuerRefName }}{{ else }}{{ printf "%s-ca-issuer" $.Release.Namespace }}{{ end }}
     kind: {{ if $.issuerRefKind }}{{ $.issuerRefKind }}{{ else }}Issuer{{ end }}
   usages:
+    {{- if .usages }}
+    {{- range .usages }}
+    - {{ . }}
+    {{- end }}
+    {{- else }}
     - server auth
     - client auth
+    {{- end }}
   keystores:
     pkcs12:
       create: true

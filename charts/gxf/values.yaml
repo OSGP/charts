@@ -108,6 +108,8 @@ logging:
 certificates: []
   # - name: example-client-tls-cert
   #   commonName: example-client
+  #   usages:
+  #     - client auth
   # - name: example-server-tls-cert
   #   commonName: example.com
   #   dnsNames:

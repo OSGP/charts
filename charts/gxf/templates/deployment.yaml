@@ -211,7 +211,7 @@ spec:
         configMap:
           name: {{ .Release.Name }}-apache
       {{- end }}
-      {{- if .Values.httpsConnector.enabled }}
+      {{- if or .Values.httpsConnector.enabled .Values.httpdSidecar.enabled }}
       - name: server-certs
         secret:
           secretName: {{ .Release.Name }}.apache-server-certs

@@ -92,6 +92,11 @@ spec:
             name: http
             protocol: TCP
         {{- end }}
+        {{- if .Values.httpsConnector.enabled }}
+          - containerPort: 8443
+            name: https
+            protocol: TCP
+        {{- end }}
         {{- range .Values.extraPorts }}
           - containerPort: {{ .port }}
             name: {{ .name }}
@@ -112,7 +117,7 @@ spec:
           mountPath: /usr/local/bin
         {{- if .Values.httpsConnector.enabled }}
         - name: server-certs
-          mountPath: /certs
+          mountPath: /etc/ssl/certs
         {{- end }}
         {{- if .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumeMounts | nindent 8 }}
@@ -211,7 +216,7 @@ spec:
         configMap:
           name: {{ .Release.Name }}-apache
       {{- end }}
-      {{- if .Values.httpsConnector.enabled }}
+      {{- if or .Values.httpsConnector.enabled .Values.httpdSidecar.enabled }}
       - name: server-certs
         secret:
           secretName: {{ .Release.Name }}.apache-server-certs

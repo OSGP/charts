@@ -7,7 +7,7 @@ spec:
     - name: http
       port: 80
       targetPort: http
-    {{- if .Values.httpdSidecar.enabled }}
+    {{- if or .Values.httpdSidecar.enabled .Values.httpsConnector.enabled }}
     - name: https
       port: 443
       targetPort: https

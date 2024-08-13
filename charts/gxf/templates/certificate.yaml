@@ -33,7 +33,7 @@ spec:
     pkcs12:
       create: true
       passwordSecretRef:
-        name: keystore-password
+        name: {{ $.Release.Name }}-keystore-password
         key: password
 ---
 {{- end }}

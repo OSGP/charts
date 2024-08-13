@@ -34,6 +34,6 @@ spec:
       create: true
       passwordSecretRef:
         name: {{ $.Release.Name }}-keystore-password
-        key: password
+        key: keystore-password
 ---
 {{- end }}

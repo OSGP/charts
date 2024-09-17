@@ -33,7 +33,7 @@ spec:
     pkcs12:
       create: true
       passwordSecretRef:
-        name: {{ $.Values.keystoreSecretName | default (printf "%s-keystore-password" $.Release.Name) }}
+        name: {{ $.Values.keystore.secretName | default (printf "%s-keystore-password" $.Release.Name) }}
         key: keystore-password
 ---
 {{- end }}

@@ -116,5 +116,5 @@ certificates: []
   #     - example.com
 keystore:
   generateSecret: false  # Set to true if you want to generate a new secret
-  sealedSecretsManaged: false  # Set to false if the annotation should not be added
+  managedBySealedSecret: false  # Set to false if the annotation should not be added
   keystoreSecretName: ""

@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
                secretRequired="false" />
     {{- end }}
     {{- if and .Values.httpsConnector.enabled (not .Values.httpdSidecar.enabled) }}
-    <Connector port="8443" protocol="org.apache.coyote.http11.Http11AprProtocol"
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="{{ $maxThreads }}" SSLEnabled="true" >
         <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
         <SSLHostConfig>

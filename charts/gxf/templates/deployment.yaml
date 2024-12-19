@@ -92,6 +92,11 @@ spec:
             name: http
             protocol: TCP
         {{- end }}
+        {{- if .Values.httpsConnector.enabled }}
+          - containerPort: 8443
+            name: https
+            protocol: TCP
+        {{- end }}
         {{- range .Values.extraPorts }}
           - containerPort: {{ .port }}
             name: {{ .name }}

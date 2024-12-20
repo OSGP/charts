@@ -12,6 +12,11 @@ spec:
       port: 443
       targetPort: https
     {{- end }}
+    {{- if .Values.httpsConnector.enabled }}
+    - name: https
+      port: 8443
+      targetPort: https
+    {{- end }}
     {{- range .Values.extraServicePorts }}
     - name: {{ $.Release.Name }}-{{ .name }}
       port: {{ .port }}

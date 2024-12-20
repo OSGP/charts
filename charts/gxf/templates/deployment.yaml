@@ -117,7 +117,7 @@ spec:
           mountPath: /usr/local/bin
         {{- if .Values.httpsConnector.enabled }}
         - name: server-certs
-          mountPath: /etc/ssl/certs
+          mountPath: /certs
         {{- end }}
         {{- if .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumeMounts | nindent 8 }}

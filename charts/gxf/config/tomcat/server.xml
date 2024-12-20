@@ -51,11 +51,11 @@ SPDX-License-Identifier: Apache-2.0
                maxThreads="{{ $maxThreads }}" SSLEnabled="true" >
         <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
         <SSLHostConfig>
-            <Certificate certificateKeyFile="/etc/ssl/certs/server.key"
+            <Certificate certificateKeyFile="/certs/server.key"
                          certificateKeyPassword="${CERTIFICATE_KEY_PASSWORD}"
-                         certificateFile="/etc/ssl/certs/server.crt"
+                         certificateFile="/certs/server.crt"
                          {{- if .Values.httpsConnector.clientAuthEnabled }}
-                         caCertificateFile="/etc/ssl/certs/root.crt"
+                         caCertificateFile="/certs/root.crt"
                          SSLVerifyClient={{ .Values.httpsConnector.SSLVerifyClient | default "optional" | quote }}
                          {{- end }}
                          type="RSA" />
